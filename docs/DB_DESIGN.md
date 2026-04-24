@@ -1,4 +1,4 @@
-﻿# Fashion Consignment System - Database Design
+﻿# Fashion Consignment System - Thiết Kế Cơ Sở Dữ Liệu
 
 ## 1) Mục tiêu Tài liệu
 
@@ -24,7 +24,7 @@ Tài liệu Được viết theo source code entity trong `src/main/java/com/fcs
 
 ---
 
-## 3) Base Entity Layer
+## 3) Lớp Entity Cơ Sở
 
 ### `BaseEntity`
 
@@ -197,6 +197,54 @@ Trường:
 Quan hệ:
 
 - Được tham chiếu bởi `Order.shippingAddress`.
+
+### `AuthIdentity` (`auth_identities`)
+
+Loại: `BaseEntity`.
+
+Trường:
+
+- `user`: FK đến `User`.
+- `provider`: enum `AuthProvider` (`LOCAL`, `GOOGLE`).
+- `providerUserId`: định danh từ provider (Google `sub`), dùng để map tài khoản social ổn định.
+- `providerEmail`: email do provider trả về.
+- `emailVerified`: trạng thái xác thực email từ provider.
+- `passwordHash`: chỉ dùng cho `LOCAL`, để trống với `GOOGLE`.
+- `isPrimary`: đánh dấu identity ưu tiên của user.
+
+Ràng buộc:
+
+- Unique `(provider, provider_user_id)` để tránh trùng identity social.
+- Unique `(user_id, provider)` để tránh 1 user có nhiều identity cùng provider.
+
+tác dụng:
+
+- Hỗ trợ đồng thời đăng nhập thường và đăng nhập Google trên cùng mô hình user.
+
+### `RefreshToken` (`refresh_tokens`)
+
+Loại: `BaseEntity`.
+
+Trường:
+
+- `user`: FK đến `User`.
+- `identity`: FK đến `AuthIdentity`.
+- `tokenHash`: hash của refresh token (không lưu raw token).
+- `issuedAt`, `expiresAt`: thời điểm phát hành và hết hạn.
+- `revokedAt`: thời điểm revoke token.
+- `revokeReason`: lý do revoke.
+- `deviceInfo`: metadata thiết bị.
+- `ipAddress`: IP lúc cấp token.
+
+Index/Ràng buộc:
+
+- Unique `token_hash`.
+- Index `(user_id, revoked_at)` và `(identity_id, revoked_at)` để truy vấn session nhanh.
+
+tác dụng:
+
+- Quản lý lifecycle refresh token (rotate, revoke, logout nhiều thiết bị).
+- Access token giữ stateless, chỉ refresh token cần lưu DB.
 
 ---
 
@@ -656,12 +704,14 @@ tác dụng:
 
 ---
 
-## 12) Tong hop quan hệ quan trong
+## 12) Tổng hợp quan hệ quan trọng
 
 - IAM:
   - `User` n-n `Role` qua `UserRole`.
   - `Role` n-n `Permission` qua `RolePermission`.
   - `User` n-n `Permission` qua `UserPermission` (override).
+  - `User` 1-n `AuthIdentity`.
+  - `AuthIdentity` 1-n `RefreshToken`.
 - Catalog/Product:
   - `Product` n-n `Category` qua `ProductCategory`.
   - `Product` n-1 `Brand`.
@@ -682,7 +732,7 @@ tác dụng:
 
 ---
 
-## 13) Ghi chu van hanh
+## 13) Ghi chú vận hành
 
 - Khi tạo migration SQL, can map chinh xac:
   - `UUID` cho PK/FK.
@@ -690,5 +740,3 @@ tác dụng:
   - Unique index cho Các mã nghiệp vụ (`code`, `orderCode`, `requestCode`, `sku`, ...).
 - Các Trường log dang để kieu `String` (JSON string) có the doi sang kieu JSON native theo DB engine neu can.
 - Media là mo hinh polymorphic (`ownerType` + `ownerId`), rang buoc owner hop le Được enforce tai service layer.
-
-

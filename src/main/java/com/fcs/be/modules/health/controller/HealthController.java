@@ -1,7 +1,7 @@
 package com.fcs.be.modules.health.controller;
 
 import com.fcs.be.common.response.ApiResponse;
-import com.fcs.be.modules.health.service.HealthService;
+import com.fcs.be.modules.health.service.interfaces.HealthService;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,6 +1,6 @@
-# Use Case Specification by Role
+# Đặc Tả Use Case Theo Vai Trò
 
-## 1. Scope and objective
+## 1. Phạm vi và mục tiêu
 
 Tai lieu nay dac ta use case theo 4 role trong he thong:
 - `Admin`
@@ -14,27 +14,27 @@ Can cu domain model: `FCS_BE/docs/DB_DESIGN.md`.
 
 ---
 
-## 2. Standard use case template
+## 2. Mẫu use case chuẩn
 
 Moi use case trong tai lieu deu theo format:
 
-- **Use case ID**
-- **Actor**
-- **Goal**
-- **Preconditions**
-- **Trigger**
-- **Main flow**
-- **Alternative flow**
-- **Exception flow**
-- **Business rules**
-- **Input/Output data**
-- **Postconditions**
+- **Mã use case**
+- **Vai trò**
+- **Mục tiêu**
+- **Tiền điều kiện**
+- **Kích hoạt**
+- **Luồng chính**
+- **Luồng thay thế**
+- **Luồng ngoại lệ**
+- **Quy tắc nghiệp vụ**
+- **Dữ liệu vào/ra**
+- **Hậu điều kiện**
 
 ---
 
-## 3. Admin use cases
+## 3. Use case của Admin
 
-### UC-ADM-01 Manage Roles and Permissions
+### UC-ADM-01 Quản lý vai trò và quyền hạn
 - **Actor**: Admin
 - **Goal**: Tao/sua role va gan permission cho role.
 - **Preconditions**: Admin dang dang nhap, co quyen `iam.role.manage`.
@@ -57,7 +57,7 @@ Moi use case trong tai lieu deu theo format:
   - Output: role version moi + mapping permission.
 - **Postconditions**: Role/permission mapping duoc cap nhat va co audit log.
 
-### UC-ADM-02 Lock or Unlock User Account
+### UC-ADM-02 Khóa hoặc mở khóa tài khoản người dùng
 - **Actor**: Admin
 - **Goal**: Khoa/mo tai khoan user theo chinh sach an ninh.
 - **Preconditions**: Admin co quyen `iam.user.lock`.
@@ -78,7 +78,7 @@ Moi use case trong tai lieu deu theo format:
   - Output: trang thai user moi.
 - **Postconditions**: User bi khoa/mo va duoc trace.
 
-### UC-ADM-03 Manage Catalog and System Settings
+### UC-ADM-03 Quản lý danh mục và cấu hình hệ thống
 - **Actor**: Admin
 - **Goal**: Quan tri `categories`, `brands`, `system_settings`.
 - **Preconditions**: Co quyen catalog/system config.
@@ -100,7 +100,7 @@ Moi use case trong tai lieu deu theo format:
   - Output: ban ghi moi da persist.
 - **Postconditions**: Danh muc va config duoc dong bo.
 
-### UC-ADM-04 Review Audit Logs and System Notifications
+### UC-ADM-04 Theo dõi audit log và thông báo hệ thống
 - **Actor**: Admin
 - **Goal**: Giam sat thao tac he thong va gui thong bao he thong.
 - **Preconditions**: Co quyen audit read va notification publish.
@@ -123,9 +123,9 @@ Moi use case trong tai lieu deu theo format:
 
 ---
 
-## 4. Manager use cases
+## 4. Use case của Manager
 
-### UC-MGR-01 Process Consignment Request
+### UC-MGR-01 Xử lý yêu cầu ký gửi
 - **Actor**: Manager
 - **Goal**: Duyet request ky gui.
 - **Preconditions**: Request o trang thai `SUBMITTED`/`UNDER_REVIEW`.
@@ -147,7 +147,7 @@ Moi use case trong tai lieu deu theo format:
   - Output: status moi cua request/item.
 - **Postconditions**: Ho so ky gui duoc cap nhat va luu lich su.
 
-### UC-MGR-02 Finalize Consignment Contract
+### UC-MGR-02 Hoàn tất hợp đồng ký gửi
 - **Actor**: Manager
 - **Goal**: Chot hop dong ky gui.
 - **Preconditions**: Request da du dieu kien approved.
@@ -167,7 +167,7 @@ Moi use case trong tai lieu deu theo format:
   - Output: contract status.
 - **Postconditions**: Contract hop le duoc luu.
 
-### UC-MGR-03 Publish Product and Manage Inventory Lifecycle
+### UC-MGR-03 Đăng bán sản phẩm và quản lý vòng đời tồn kho
 - **Actor**: Manager
 - **Goal**: Dua item da duyet thanh san pham ban duoc va quan ly kho.
 - **Preconditions**: Item `ACCEPTED` va contract hop le.
@@ -190,7 +190,7 @@ Moi use case trong tai lieu deu theo format:
   - Output: productId + status.
 - **Postconditions**: Product san sang ban hoac dang ban.
 
-### UC-MGR-04 Handle Order Exception and Voucher Operation
+### UC-MGR-04 Xử lý ngoại lệ đơn hàng và vận hành voucher
 - **Actor**: Manager
 - **Goal**: Xu ly don bat thuong va van hanh voucher.
 - **Preconditions**: Don phat sinh su co hoac voucher can can thiep.
@@ -213,9 +213,9 @@ Moi use case trong tai lieu deu theo format:
 
 ---
 
-## 5. Buyer use cases
+## 5. Use case của Buyer
 
-### UC-BUY-01 Browse and Search Products
+### UC-BUY-01 Duyệt và tìm kiếm sản phẩm
 - **Actor**: Buyer
 - **Goal**: Tim va xem san pham phu hop.
 - **Preconditions**: Product dang `SELLING`.
@@ -235,7 +235,7 @@ Moi use case trong tai lieu deu theo format:
   - Output: danh sach product.
 - **Postconditions**: Buyer chon duoc product quan tam.
 
-### UC-BUY-02 Manage Cart
+### UC-BUY-02 Quản lý giỏ hàng
 - **Actor**: Buyer
 - **Goal**: Them/xoa product khoi gio hang.
 - **Preconditions**: Co cart cua user hoac guest session.
@@ -255,7 +255,7 @@ Moi use case trong tai lieu deu theo format:
   - Output: cart state moi.
 - **Postconditions**: Cart duoc dong bo.
 
-### UC-BUY-03 Checkout and Place Order
+### UC-BUY-03 Thanh toán và đặt hàng
 - **Actor**: Buyer
 - **Goal**: Dat hang thanh cong.
 - **Preconditions**: Cart hop le, co dia chi giao hang.
@@ -277,7 +277,7 @@ Moi use case trong tai lieu deu theo format:
   - Output: order summary + orderCode.
 - **Postconditions**: Don duoc tao va truong thai ban dau hop le.
 
-### UC-BUY-04 Track Order and Read Notifications
+### UC-BUY-04 Theo dõi đơn hàng và đọc thông báo
 - **Actor**: Buyer
 - **Goal**: Theo doi tien trinh don hang.
 - **Preconditions**: Buyer co don hang.
@@ -300,9 +300,9 @@ Moi use case trong tai lieu deu theo format:
 
 ---
 
-## 6. Consigner use cases
+## 6. Use case của Consigner
 
-### UC-CON-01 Create Consignment Request
+### UC-CON-01 Tạo yêu cầu ký gửi
 - **Actor**: Consigner
 - **Goal**: Tao yeu cau ky gui moi.
 - **Preconditions**: Consigner da KYC/active.
@@ -323,7 +323,7 @@ Moi use case trong tai lieu deu theo format:
   - Output: request code + status.
 - **Postconditions**: Request vao hang doi duyet.
 
-### UC-CON-02 Track Inspection and Contract
+### UC-CON-02 Theo dõi kiểm định và hợp đồng
 - **Actor**: Consigner
 - **Goal**: Theo doi ket qua kiem dinh va hop dong.
 - **Preconditions**: Da co consignment request.
@@ -343,7 +343,7 @@ Moi use case trong tai lieu deu theo format:
   - Output: timeline + contract data.
 - **Postconditions**: Consigner nam ro tinh trang ky gui.
 
-### UC-CON-03 Monitor Revenue in Wallet
+### UC-CON-03 Theo dõi doanh thu trong ví
 - **Actor**: Consigner
 - **Goal**: Theo doi so du va lich su bien dong vi.
 - **Preconditions**: Co wallet.
@@ -363,7 +363,7 @@ Moi use case trong tai lieu deu theo format:
   - Output: balance + transaction list.
 - **Postconditions**: Consigner doi soat doanh thu.
 
-### UC-CON-04 Create Withdrawal Request and Track Payout
+### UC-CON-04 Tạo yêu cầu rút tiền và theo dõi chi trả
 - **Actor**: Consigner
 - **Goal**: Gui yeu cau rut tien va theo doi xu ly.
 - **Preconditions**: `availableBalance` du.
@@ -386,22 +386,22 @@ Moi use case trong tai lieu deu theo format:
 
 ---
 
-## 7. Cross-role consistency matrix
+## 7. Ma trận nhất quán liên vai trò
 
-| Capability | Admin | Manager | Buyer | Consigner |
-|---|---|---|---|---|
-| IAM role/permission | Full | No | No | No |
-| Catalog/system settings | Full | Limited (operational) | Read only | Read only |
-| Consignment approval | Oversight | Full operation | No | Submit/track own |
-| Product lifecycle | Oversight | Full operation | View/purchase | View own linked |
-| Order exception | Oversight | Full operation | Own orders only | No |
-| Wallet/withdrawal approval | Oversight | Process/approve | No | Own wallet/request |
-| Audit logs | Full | Partial | No | No |
+| Năng lực | Admin | Manager | Buyer | Consigner |
+| --- | --- | --- | --- | --- |
+| IAM role/permission | Toàn quyền | Không | Không | Không |
+| Catalog/system settings | Toàn quyền | Giới hạn (vận hành) | Chỉ xem | Chỉ xem |
+| Consignment approval | Giám sát | Toàn quyền vận hành | Không | Gửi/theo dõi của chính mình |
+| Product lifecycle | Giám sát | Toàn quyền vận hành | Xem/mua | Xem phần liên quan của mình |
+| Order exception | Giám sát | Toàn quyền vận hành | Chỉ đơn của chính mình | Không |
+| Wallet/withdrawal approval | Giám sát | Xử lý/duyệt | Không | Ví/yêu cầu của chính mình |
+| Audit logs | Toàn quyền | Một phần | Không | Không |
 
 ---
 
-## 8. Notes for next phase
+## 8. Ghi chú cho giai đoạn tiếp theo
 
-- Moi use case co the tach thanh user story theo format: "As a <role>, I want <goal>, so that <value>".
+- Moi use case co the tach thanh user story theo format: "As a `role`, I want `goal`, so that `value`".
 - Moi business rule nen map thanh test case va validation rule o API layer.
 - Cac transition status nen dua vao workflow guard trong service layer va ghi history bat buoc.
