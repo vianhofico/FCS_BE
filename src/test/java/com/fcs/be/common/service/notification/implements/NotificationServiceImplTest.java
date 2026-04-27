@@ -1,4 +1,4 @@
-package com.fcs.be.common.service.notification.implement;
+package com.fcs.be.common.service.notification.implements;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;

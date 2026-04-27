@@ -1,4 +1,4 @@
-package com.fcs.be.common.service.file.implement;
+package com.fcs.be.common.service.file.implements;
 
 import com.fcs.be.common.service.file.PresignedUrlResult;
 import com.fcs.be.common.service.file.interfaces.FileService;

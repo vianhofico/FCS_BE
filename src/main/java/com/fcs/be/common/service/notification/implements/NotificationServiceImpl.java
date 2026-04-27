@@ -1,4 +1,4 @@
-package com.fcs.be.common.service.notification.implement;
+package com.fcs.be.common.service.notification.implements;
 
 import com.fcs.be.common.service.notification.interfaces.NotificationService;
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package com.fcs.be.common.service.file.implement;
+package com.fcs.be.common.service.file.implements;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

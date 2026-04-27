@@ -1,4 +1,4 @@
-package com.fcs.be.common.service.redis.implement;
+package com.fcs.be.common.service.redis.implements;
 
 import com.fcs.be.common.service.redis.interfaces.RedisService;
 import java.time.Duration;

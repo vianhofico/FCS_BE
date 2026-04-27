@@ -1,4 +1,4 @@
-package com.fcs.be.modules.health.service.implement;
+package com.fcs.be.modules.health.service.implements;
 
 import com.fcs.be.modules.health.service.interfaces.HealthService;
 import java.time.Instant;

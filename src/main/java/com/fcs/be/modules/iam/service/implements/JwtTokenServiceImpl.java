@@ -1,4 +1,4 @@
-package com.fcs.be.modules.iam.service.implement;
+package com.fcs.be.modules.iam.service.implements;
 
 import com.fcs.be.config.AppConfigHelper;
 import com.fcs.be.modules.iam.service.interfaces.JwtTokenService;
