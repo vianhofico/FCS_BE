@@ -5,7 +5,7 @@ import com.fcs.be.modules.audit.entity.ActivityLog;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuditMapper {
+public class ActivityLogMapper {
 
     public ActivityLogResponse toResponse(ActivityLog activityLog) {
         return new ActivityLogResponse(

@@ -2,7 +2,7 @@ package com.fcs.be.modules.notification.controller;
 
 import com.fcs.be.common.response.ApiResponse;
 import com.fcs.be.modules.notification.dto.response.UserNotificationResponse;
-import com.fcs.be.modules.notification.service.interfaces.NotificationModuleService;
+import com.fcs.be.modules.notification.service.interfaces.UserNotificationService;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
@@ -15,26 +15,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/notifications")
-public class NotificationController {
+public class UserNotificationController {
 
-    private final NotificationModuleService notificationModuleService;
+    private final UserNotificationService userNotificationService;
 
-    public NotificationController(NotificationModuleService notificationModuleService) {
-        this.notificationModuleService = notificationModuleService;
+    public UserNotificationController(UserNotificationService userNotificationService) {
+        this.userNotificationService = userNotificationService;
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<UserNotificationResponse>>> getNotifications() {
         return ResponseEntity.ok(ApiResponse.ok(
             "Fetched notifications",
-            notificationModuleService.getUserNotifications()
+            userNotificationService.getUserNotifications()
         ));
     }
 
     @PatchMapping("/{id}/read")
     public ResponseEntity<ApiResponse<UserNotificationResponse>> markRead(@PathVariable UUID id) {
         try {
-            return ResponseEntity.ok(ApiResponse.ok("Notification marked as read", notificationModuleService.markRead(id)));
+            return ResponseEntity.ok(ApiResponse.ok("Notification marked as read", userNotificationService.markRead(id)));
         } catch (EntityNotFoundException ex) {
             return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
         }

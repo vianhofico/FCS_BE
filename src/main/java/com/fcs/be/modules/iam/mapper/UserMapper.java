@@ -5,7 +5,7 @@ import com.fcs.be.modules.iam.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component
-public class IamMapper {
+public class UserMapper {
 
     public UserSummaryResponse toSummary(User user) {
         return new UserSummaryResponse(

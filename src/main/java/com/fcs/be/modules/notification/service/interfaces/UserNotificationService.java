@@ -4,7 +4,7 @@ import com.fcs.be.modules.notification.dto.response.UserNotificationResponse;
 import java.util.List;
 import java.util.UUID;
 
-public interface NotificationModuleService {
+public interface UserNotificationService {
 
     List<UserNotificationResponse> getUserNotifications();
 

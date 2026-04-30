@@ -5,7 +5,7 @@ import com.fcs.be.modules.notification.entity.UserNotification;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NotificationMapper {
+public class UserNotificationMapper {
 
     public UserNotificationResponse toResponse(UserNotification userNotification) {
         return new UserNotificationResponse(

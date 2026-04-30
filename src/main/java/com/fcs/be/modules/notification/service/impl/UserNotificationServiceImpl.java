@@ -2,9 +2,9 @@ package com.fcs.be.modules.notification.service.impl;
 
 import com.fcs.be.modules.notification.dto.response.UserNotificationResponse;
 import com.fcs.be.modules.notification.entity.UserNotification;
-import com.fcs.be.modules.notification.mapper.NotificationMapper;
+import com.fcs.be.modules.notification.mapper.UserNotificationMapper;
 import com.fcs.be.modules.notification.repository.UserNotificationRepository;
-import com.fcs.be.modules.notification.service.interfaces.NotificationModuleService;
+import com.fcs.be.modules.notification.service.interfaces.UserNotificationService;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.util.List;
@@ -13,24 +13,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class NotificationModuleServiceImpl implements NotificationModuleService {
+public class UserNotificationServiceImpl implements UserNotificationService {
 
     private final UserNotificationRepository userNotificationRepository;
-    private final NotificationMapper notificationMapper;
+    private final UserNotificationMapper userNotificationMapper;
 
-    public NotificationModuleServiceImpl(
+    public UserNotificationServiceImpl(
         UserNotificationRepository userNotificationRepository,
-        NotificationMapper notificationMapper
+        UserNotificationMapper userNotificationMapper
     ) {
         this.userNotificationRepository = userNotificationRepository;
-        this.notificationMapper = notificationMapper;
+        this.userNotificationMapper = userNotificationMapper;
     }
 
     @Override
     public List<UserNotificationResponse> getUserNotifications() {
         return userNotificationRepository.findByIsDeletedFalseOrderByCreatedAtDesc()
             .stream()
-            .map(notificationMapper::toResponse)
+            .map(userNotificationMapper::toResponse)
             .toList();
     }
 
@@ -41,6 +41,6 @@ public class NotificationModuleServiceImpl implements NotificationModuleService 
             .orElseThrow(() -> new EntityNotFoundException("Notification not found"));
         userNotification.setRead(true);
         userNotification.setReadAt(Instant.now());
-        return notificationMapper.toResponse(userNotificationRepository.save(userNotification));
+        return userNotificationMapper.toResponse(userNotificationRepository.save(userNotification));
     }
 }

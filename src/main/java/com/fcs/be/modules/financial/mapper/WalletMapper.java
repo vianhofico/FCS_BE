@@ -5,7 +5,7 @@ import com.fcs.be.modules.financial.entity.Wallet;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FinancialMapper {
+public class WalletMapper {
 
     public WalletResponse toWalletResponse(Wallet wallet) {
         return new WalletResponse(

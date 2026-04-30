@@ -2,7 +2,7 @@ package com.fcs.be.modules.audit.controller;
 
 import com.fcs.be.common.response.ApiResponse;
 import com.fcs.be.modules.audit.dto.response.ActivityLogResponse;
-import com.fcs.be.modules.audit.service.interfaces.AuditService;
+import com.fcs.be.modules.audit.service.interfaces.ActivityLogService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/audit/activity-logs")
-public class AuditController {
+public class ActivityLogController {
 
-    private final AuditService auditService;
+    private final ActivityLogService activityLogService;
 
-    public AuditController(AuditService auditService) {
-        this.auditService = auditService;
+    public ActivityLogController(ActivityLogService activityLogService) {
+        this.activityLogService = activityLogService;
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<ActivityLogResponse>>> getActivityLogs() {
-        return ResponseEntity.ok(ApiResponse.ok("Fetched activity logs", auditService.getActivityLogs()));
+        return ResponseEntity.ok(ApiResponse.ok("Fetched activity logs", activityLogService.getActivityLogs()));
     }
 }

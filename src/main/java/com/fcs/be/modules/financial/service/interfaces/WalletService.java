@@ -5,7 +5,7 @@ import com.fcs.be.modules.financial.dto.response.WalletResponse;
 import java.util.List;
 import java.util.UUID;
 
-public interface FinancialService {
+public interface WalletService {
 
     List<WalletResponse> getWallets();
 

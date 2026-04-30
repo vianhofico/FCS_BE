@@ -3,7 +3,7 @@ package com.fcs.be.modules.financial.controller;
 import com.fcs.be.common.response.ApiResponse;
 import com.fcs.be.modules.financial.dto.request.UpdateWalletRequest;
 import com.fcs.be.modules.financial.dto.response.WalletResponse;
-import com.fcs.be.modules.financial.service.interfaces.FinancialService;
+import com.fcs.be.modules.financial.service.interfaces.WalletService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -18,23 +18,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/financial/wallets")
-public class FinancialController {
+public class WalletController {
 
-    private final FinancialService financialService;
+    private final WalletService walletService;
 
-    public FinancialController(FinancialService financialService) {
-        this.financialService = financialService;
+    public WalletController(WalletService walletService) {
+        this.walletService = walletService;
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<WalletResponse>>> getWallets() {
-        return ResponseEntity.ok(ApiResponse.ok("Fetched wallets", financialService.getWallets()));
+        return ResponseEntity.ok(ApiResponse.ok("Fetched wallets", walletService.getWallets()));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<WalletResponse>> getWallet(@PathVariable UUID id) {
         try {
-            return ResponseEntity.ok(ApiResponse.ok("Fetched wallet", financialService.getWallet(id)));
+            return ResponseEntity.ok(ApiResponse.ok("Fetched wallet", walletService.getWallet(id)));
         } catch (EntityNotFoundException ex) {
             return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
         }
@@ -46,7 +46,7 @@ public class FinancialController {
         @Valid @RequestBody UpdateWalletRequest request
     ) {
         try {
-            return ResponseEntity.ok(ApiResponse.ok("Wallet updated", financialService.updateWallet(id, request)));
+            return ResponseEntity.ok(ApiResponse.ok("Wallet updated", walletService.updateWallet(id, request)));
         } catch (EntityNotFoundException ex) {
             return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
         }
