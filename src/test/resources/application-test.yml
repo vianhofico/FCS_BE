@@ -17,6 +17,13 @@ spring:
             client-secret: test-client-secret
 
 app:
+  security:
+    jwt-secret: this-is-a-very-long-test-secret-key-with-256-bits-or-more-characters-for-jwts-encryption-test-key
+    jwt-access-secret: this-is-a-very-long-test-access-secret-key-with-256-bits-or-more-characters-for-jwts-encryption
+    jwt-refresh-secret: this-is-a-very-long-test-refresh-secret-key-with-256-bits-or-more-characters-for-jwts-encryption
+    jwt-access-ttl-seconds: 3600
+    jwt-refresh-ttl-seconds: 604800
+    jwt-issuer: fcs-backend-test
   cors:
     allowed-origins: http://localhost:3000
   storage:

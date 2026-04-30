@@ -4,7 +4,6 @@ import com.fcs.be.common.response.ApiResponse;
 import com.fcs.be.modules.catalog.dto.request.UpsertCategoryRequest;
 import com.fcs.be.modules.catalog.dto.response.CategoryResponse;
 import com.fcs.be.modules.catalog.service.interfaces.CategoryService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -35,11 +34,7 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<CategoryResponse>> getCategory(@PathVariable UUID id) {
-        try {
-            return ResponseEntity.ok(ApiResponse.ok("Fetched category", categoryService.getCategory(id)));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok("Fetched category", categoryService.getCategory(id)));
     }
 
     @PostMapping
@@ -52,20 +47,12 @@ public class CategoryController {
         @PathVariable UUID id,
         @Valid @RequestBody UpsertCategoryRequest request
     ) {
-        try {
-            return ResponseEntity.ok(ApiResponse.ok("Category updated", categoryService.updateCategory(id, request)));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok("Category updated", categoryService.updateCategory(id, request)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteCategory(@PathVariable UUID id) {
-        try {
-            categoryService.deleteCategory(id);
-            return ResponseEntity.ok(ApiResponse.ok("Category deleted"));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
-        }
+        categoryService.deleteCategory(id);
+        return ResponseEntity.ok(ApiResponse.ok("Category deleted"));
     }
 }

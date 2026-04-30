@@ -11,11 +11,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(
     name = "auth_identities",
@@ -40,12 +47,14 @@ public class AuthIdentity extends BaseEntity {
     @Column(name = "provider_email", length = 180)
     private String providerEmail;
 
+    @Builder.Default
     @Column(name = "email_verified", nullable = false)
     private boolean emailVerified = false;
 
     @Column(name = "password_hash", length = 255)
     private String passwordHash;
 
+    @Builder.Default
     @Column(name = "is_primary", nullable = false)
     private boolean primary = true;
 }

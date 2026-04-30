@@ -2,18 +2,12 @@ package com.fcs.be.modules.consignment.mapper;
 
 import com.fcs.be.modules.consignment.dto.response.ConsignmentResponse;
 import com.fcs.be.modules.consignment.entity.ConsignmentRequest;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class ConsignmentMapper {
+@Mapper(componentModel = "spring")
+public interface ConsignmentMapper {
 
-    public ConsignmentResponse toResponse(ConsignmentRequest request) {
-        return new ConsignmentResponse(
-            request.getId(),
-            request.getConsignor().getId(),
-            request.getCode(),
-            request.getStatus(),
-            request.getNote()
-        );
-    }
+    @Mapping(target = "consignorId", source = "consignor.id")
+    ConsignmentResponse toResponse(ConsignmentRequest request);
 }

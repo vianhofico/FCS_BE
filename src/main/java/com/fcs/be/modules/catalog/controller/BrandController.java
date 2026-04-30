@@ -4,7 +4,6 @@ import com.fcs.be.common.response.ApiResponse;
 import com.fcs.be.modules.catalog.dto.request.UpsertBrandRequest;
 import com.fcs.be.modules.catalog.dto.response.BrandResponse;
 import com.fcs.be.modules.catalog.service.interfaces.BrandService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -35,11 +34,7 @@ public class BrandController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<BrandResponse>> getBrand(@PathVariable UUID id) {
-        try {
-            return ResponseEntity.ok(ApiResponse.ok("Fetched brand", brandService.getBrand(id)));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok("Fetched brand", brandService.getBrand(id)));
     }
 
     @PostMapping
@@ -52,20 +47,12 @@ public class BrandController {
         @PathVariable UUID id,
         @Valid @RequestBody UpsertBrandRequest request
     ) {
-        try {
-            return ResponseEntity.ok(ApiResponse.ok("Brand updated", brandService.updateBrand(id, request)));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok("Brand updated", brandService.updateBrand(id, request)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteBrand(@PathVariable UUID id) {
-        try {
-            brandService.deleteBrand(id);
-            return ResponseEntity.ok(ApiResponse.ok("Brand deleted"));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
-        }
+        brandService.deleteBrand(id);
+        return ResponseEntity.ok(ApiResponse.ok("Brand deleted"));
     }
 }

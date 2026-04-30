@@ -6,7 +6,6 @@ import com.fcs.be.modules.order.dto.request.CreateOrderRequest;
 import com.fcs.be.modules.order.dto.request.UpdateOrderStatusRequest;
 import com.fcs.be.modules.order.dto.response.OrderResponse;
 import com.fcs.be.modules.order.service.interfaces.OrderService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -38,20 +37,12 @@ public class OrderController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<OrderResponse>> getOrder(@PathVariable UUID id) {
-        try {
-            return ResponseEntity.ok(ApiResponse.ok("Fetched order", orderService.getOrder(id)));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok("Fetched order", orderService.getOrder(id)));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<OrderResponse>> createOrder(@Valid @RequestBody CreateOrderRequest request) {
-        try {
-            return ResponseEntity.ok(ApiResponse.ok("Order created", orderService.createOrder(request)));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.badRequest().body(ApiResponse.error(ex.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok("Order created", orderService.createOrder(request)));
     }
 
     @PatchMapping("/{id}/status")
@@ -59,23 +50,13 @@ public class OrderController {
         @PathVariable UUID id,
         @Valid @RequestBody UpdateOrderStatusRequest request
     ) {
-        try {
-            return ResponseEntity.ok(ApiResponse.ok(
-                "Order status updated",
-                orderService.updateStatus(id, request.status(), request.reason())
-            ));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok("Order status updated",
+            orderService.updateStatus(id, request.status(), request.reason())));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteOrder(@PathVariable UUID id) {
-        try {
-            orderService.deleteOrder(id);
-            return ResponseEntity.ok(ApiResponse.ok("Order deleted"));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
-        }
+        orderService.deleteOrder(id);
+        return ResponseEntity.ok(ApiResponse.ok("Order deleted"));
     }
 }

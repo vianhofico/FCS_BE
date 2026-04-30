@@ -10,11 +10,18 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "vouchers")
 public class Voucher extends SoftDeleteEntity {
@@ -26,7 +33,7 @@ public class Voucher extends SoftDeleteEntity {
     @Column(name = "discount_type", nullable = false, length = 20)
     private VoucherDiscountType discountType;
 
-    @Column(name = "value", nullable = false, precision = 19, scale = 4)
+    @Column(name = "discount_value", nullable = false, precision = 19, scale = 4)
     private BigDecimal value;
 
     @Column(name = "min_order_value", precision = 19, scale = 4)
@@ -44,6 +51,7 @@ public class Voucher extends SoftDeleteEntity {
     @Column(name = "usage_limit")
     private Integer usageLimit;
 
+    @Builder.Default
     @Column(name = "used_count", nullable = false)
     private Integer usedCount = 0;
 

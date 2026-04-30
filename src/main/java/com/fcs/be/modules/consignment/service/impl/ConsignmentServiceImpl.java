@@ -56,11 +56,12 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     public ConsignmentResponse createConsignment(CreateConsignmentRequest request) {
         User consignor = userRepository.findByIdAndIsDeletedFalse(request.consignorId())
             .orElseThrow(() -> new EntityNotFoundException("Consignor not found"));
-        ConsignmentRequest entity = new ConsignmentRequest();
-        entity.setConsignor(consignor);
-        entity.setCode(request.code());
-        entity.setStatus(request.status());
-        entity.setNote(request.note());
+        ConsignmentRequest entity = ConsignmentRequest.builder()
+            .consignor(consignor)
+            .code(request.code())
+            .status(request.status())
+            .note(request.note())
+            .build();
         ConsignmentRequest saved = consignmentRequestRepository.save(entity);
         appendStatusLog(saved, null, saved.getStatus(), "Consignment created");
         return consignmentMapper.toResponse(saved);
@@ -98,18 +99,20 @@ public class ConsignmentServiceImpl implements ConsignmentService {
             .orElseThrow(() -> new EntityNotFoundException("Consignment not found"));
     }
 
+    @Transactional
     private void appendStatusLog(
         ConsignmentRequest request,
         ConsignmentRequestStatus fromStatus,
         ConsignmentRequestStatus toStatus,
         String reason
     ) {
-        ConsignmentStatusHistory history = new ConsignmentStatusHistory();
-        history.setEntityType("REQUEST");
-        history.setEntityId(request.getId());
-        history.setFromStatus(fromStatus == null ? null : fromStatus.name());
-        history.setToStatus(toStatus.name());
-        history.setReason(reason);
+        ConsignmentStatusHistory history = ConsignmentStatusHistory.builder()
+            .entityType("REQUEST")
+            .entityId(request.getId())
+            .fromStatus(fromStatus == null ? null : fromStatus.name())
+            .toStatus(toStatus.name())
+            .reason(reason)
+            .build();
         consignmentStatusHistoryRepository.save(history);
     }
 }

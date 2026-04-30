@@ -1,0 +1,259 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------------< com.fcs:fcs-be >---------------------------
+[INFO] Building FCS_BE 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ fcs-be ---
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ fcs-be ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ fcs-be ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ fcs-be ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 16 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/common/service/redis/impl/RedisServiceImplTest.java: d:\KY8\EXE\Fashion Consignment System\FCS_BE\src\test\java\com\fcs\be\common\service\redis\impl\RedisServiceImplTest.java uses unchecked or unsafe operations.
+[INFO] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/common/service/redis/impl/RedisServiceImplTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[70,43] constructor CreateWithdrawalRequest in record com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest cannot be applied to given types;
+  required: java.util.UUID,java.math.BigDecimal
+  found:    java.util.UUID,java.math.BigDecimal,java.lang.String
+  reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[86,43] constructor CreateWithdrawalRequest in record com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest cannot be applied to given types;
+  required: java.util.UUID,java.math.BigDecimal
+  found:    java.util.UUID,java.math.BigDecimal,java.lang.String
+  reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[97,44] constructor CreateWithdrawalRequest in record com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest cannot be applied to given types;
+  required: java.util.UUID,java.math.BigDecimal
+  found:    java.util.UUID,java.math.BigDecimal,java.lang.String
+  reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[102,44] constructor CreateWithdrawalRequest in record com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest cannot be applied to given types;
+  required: java.util.UUID,java.math.BigDecimal
+  found:    java.util.UUID,java.math.BigDecimal,java.lang.String
+  reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[111,70] method getWithdrawals in class com.fcs.be.modules.financial.service.impl.WithdrawalServiceImpl cannot be applied to given types;
+  required: no arguments
+  found:    java.util.UUID
+  reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[118,43] constructor CreateWithdrawalRequest in record com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest cannot be applied to given types;
+  required: java.util.UUID,java.math.BigDecimal
+  found:    java.util.UUID,java.math.BigDecimal,java.lang.String
+  reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[126,63] cannot find symbol
+  symbol:   method updateWithdrawalStatus(java.util.UUID,com.fcs.be.common.enums.WithdrawalStatus,java.util.UUID,java.lang.String)
+  location: variable withdrawalService of type com.fcs.be.modules.financial.service.impl.WithdrawalServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[138,43] constructor CreateWithdrawalRequest in record com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest cannot be applied to given types;
+  required: java.util.UUID,java.math.BigDecimal
+  found:    java.util.UUID,java.math.BigDecimal,java.lang.String
+  reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[146,63] cannot find symbol
+  symbol:   method updateWithdrawalStatus(java.util.UUID,com.fcs.be.common.enums.WithdrawalStatus,java.util.UUID,java.lang.String)
+  location: variable withdrawalService of type com.fcs.be.modules.financial.service.impl.WithdrawalServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[161,43] constructor CreateWithdrawalRequest in record com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest cannot be applied to given types;
+  required: java.util.UUID,java.math.BigDecimal
+  found:    java.util.UUID,java.math.BigDecimal,java.lang.String
+  reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[89,13] cannot find symbol
+  symbol:   method ownedBy(com.fcs.be.modules.iam.entity.User)
+  location: class com.fcs.be.modules.product.entity.Product.ProductBuilder<capture#1 of ?,capture#2 of ?>
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[96,32] cannot find symbol
+  symbol:   class OrderItemRequest
+  location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[97,35] cannot find symbol
+  symbol:   class OrderItemRequest
+  location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[111,33] cannot find symbol
+  symbol:   variable PENDING
+  location: class com.fcs.be.common.enums.OrderStatus
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[121,32] cannot find symbol
+  symbol:   class OrderItemRequest
+  location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[122,35] cannot find symbol
+  symbol:   class OrderItemRequest
+  location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[135,32] cannot find symbol
+  symbol:   class OrderItemRequest
+  location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[136,35] cannot find symbol
+  symbol:   class OrderItemRequest
+  location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[141,50] cannot find symbol
+  symbol:   method getOrdersByBuyer(java.util.UUID)
+  location: variable orderService of type com.fcs.be.modules.order.service.impl.OrderServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[148,32] cannot find symbol
+  symbol:   class OrderItemRequest
+  location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[149,35] cannot find symbol
+  symbol:   class OrderItemRequest
+  location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[154,45] cannot find symbol
+  symbol:   method updateOrderStatus(java.util.UUID,com.fcs.be.common.enums.OrderStatus)
+  location: variable orderService of type com.fcs.be.modules.order.service.impl.OrderServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[165,32] cannot find symbol
+  symbol:   class OrderItemRequest
+  location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[166,35] cannot find symbol
+  symbol:   class OrderItemRequest
+  location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[171,21] cannot find symbol
+  symbol:   method updateOrderStatus(java.util.UUID,com.fcs.be.common.enums.OrderStatus)
+  location: variable orderService of type com.fcs.be.modules.order.service.impl.OrderServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/VoucherServiceImplTest.java:[122,32] cannot find symbol
+  symbol:   variable FIXED
+  location: class com.fcs.be.common.enums.VoucherDiscountType
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/product/service/impl/ProductServiceImplTest.java:[52,24] constructor CreateProductRequest in record com.fcs.be.modules.product.dto.request.CreateProductRequest cannot be applied to given types;
+  required: java.util.UUID,java.util.UUID,java.lang.String,java.lang.String,java.lang.String,java.math.BigDecimal,java.math.BigDecimal,java.math.BigDecimal,com.fcs.be.common.enums.ProductStatus
+  found:    java.lang.String,java.lang.String,java.lang.String,java.math.BigDecimal,java.math.BigDecimal,java.lang.String,com.fcs.be.common.enums.ProductStatus,java.util.UUID
+  reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/product/service/impl/ProductServiceImplTest.java:[96,56] cannot find symbol
+  symbol:   method getProductsByOwner(java.util.UUID)
+  location: variable productService of type com.fcs.be.modules.product.service.impl.ProductServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/product/service/impl/ProductServiceImplTest.java:[105,46] constructor UpdateProductRequest in record com.fcs.be.modules.product.dto.request.UpdateProductRequest cannot be applied to given types;
+  required: java.util.UUID,java.lang.String,java.lang.String,java.math.BigDecimal,java.math.BigDecimal,java.math.BigDecimal
+  found:    java.lang.String,java.lang.String,java.math.BigDecimal,java.math.BigDecimal,java.lang.String
+  reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/product/service/impl/ProductServiceImplTest.java:[125,56] cannot find symbol
+  symbol:   method getProductsByOwner(java.util.UUID)
+  location: variable productService of type com.fcs.be.modules.product.service.impl.ProductServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/product/service/impl/ProductServiceImplTest.java:[139,13] cannot find symbol
+  symbol:   method ownedBy(com.fcs.be.modules.iam.entity.User)
+  location: class com.fcs.be.modules.product.entity.Product.ProductBuilder<capture#3 of ?,capture#4 of ?>
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/product/service/impl/ProductServiceImplTest.java:[143,63] cannot find symbol
+  symbol:   method getSellingProducts()
+  location: variable productService of type com.fcs.be.modules.product.service.impl.ProductServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/product/service/impl/ProductServiceImplTest.java:[152,56] cannot find symbol
+  symbol:   method getProductsByStatus(com.fcs.be.common.enums.ProductStatus)
+  location: variable productService of type com.fcs.be.modules.product.service.impl.ProductServiceImpl
+[INFO] 33 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.631 s
+[INFO] Finished at: 2026-05-01T00:47:55+07:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:testCompile (default-testCompile) on project fcs-be: Compilation failure: Compilation failure: 
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[70,43] constructor CreateWithdrawalRequest in record com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest cannot be applied to given types;
+[ERROR]   required: java.util.UUID,java.math.BigDecimal
+[ERROR]   found:    java.util.UUID,java.math.BigDecimal,java.lang.String
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[86,43] constructor CreateWithdrawalRequest in record com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest cannot be applied to given types;
+[ERROR]   required: java.util.UUID,java.math.BigDecimal
+[ERROR]   found:    java.util.UUID,java.math.BigDecimal,java.lang.String
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[97,44] constructor CreateWithdrawalRequest in record com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest cannot be applied to given types;
+[ERROR]   required: java.util.UUID,java.math.BigDecimal
+[ERROR]   found:    java.util.UUID,java.math.BigDecimal,java.lang.String
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[102,44] constructor CreateWithdrawalRequest in record com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest cannot be applied to given types;
+[ERROR]   required: java.util.UUID,java.math.BigDecimal
+[ERROR]   found:    java.util.UUID,java.math.BigDecimal,java.lang.String
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[111,70] method getWithdrawals in class com.fcs.be.modules.financial.service.impl.WithdrawalServiceImpl cannot be applied to given types;
+[ERROR]   required: no arguments
+[ERROR]   found:    java.util.UUID
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[118,43] constructor CreateWithdrawalRequest in record com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest cannot be applied to given types;
+[ERROR]   required: java.util.UUID,java.math.BigDecimal
+[ERROR]   found:    java.util.UUID,java.math.BigDecimal,java.lang.String
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[126,63] cannot find symbol
+[ERROR]   symbol:   method updateWithdrawalStatus(java.util.UUID,com.fcs.be.common.enums.WithdrawalStatus,java.util.UUID,java.lang.String)
+[ERROR]   location: variable withdrawalService of type com.fcs.be.modules.financial.service.impl.WithdrawalServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[138,43] constructor CreateWithdrawalRequest in record com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest cannot be applied to given types;
+[ERROR]   required: java.util.UUID,java.math.BigDecimal
+[ERROR]   found:    java.util.UUID,java.math.BigDecimal,java.lang.String
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[146,63] cannot find symbol
+[ERROR]   symbol:   method updateWithdrawalStatus(java.util.UUID,com.fcs.be.common.enums.WithdrawalStatus,java.util.UUID,java.lang.String)
+[ERROR]   location: variable withdrawalService of type com.fcs.be.modules.financial.service.impl.WithdrawalServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/financial/service/impl/WithdrawalServiceImplTest.java:[161,43] constructor CreateWithdrawalRequest in record com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest cannot be applied to given types;
+[ERROR]   required: java.util.UUID,java.math.BigDecimal
+[ERROR]   found:    java.util.UUID,java.math.BigDecimal,java.lang.String
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[89,13] cannot find symbol
+[ERROR]   symbol:   method ownedBy(com.fcs.be.modules.iam.entity.User)
+[ERROR]   location: class com.fcs.be.modules.product.entity.Product.ProductBuilder<capture#1 of ?,capture#2 of ?>
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[96,32] cannot find symbol
+[ERROR]   symbol:   class OrderItemRequest
+[ERROR]   location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[97,35] cannot find symbol
+[ERROR]   symbol:   class OrderItemRequest
+[ERROR]   location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[111,33] cannot find symbol
+[ERROR]   symbol:   variable PENDING
+[ERROR]   location: class com.fcs.be.common.enums.OrderStatus
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[121,32] cannot find symbol
+[ERROR]   symbol:   class OrderItemRequest
+[ERROR]   location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[122,35] cannot find symbol
+[ERROR]   symbol:   class OrderItemRequest
+[ERROR]   location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[135,32] cannot find symbol
+[ERROR]   symbol:   class OrderItemRequest
+[ERROR]   location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[136,35] cannot find symbol
+[ERROR]   symbol:   class OrderItemRequest
+[ERROR]   location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[141,50] cannot find symbol
+[ERROR]   symbol:   method getOrdersByBuyer(java.util.UUID)
+[ERROR]   location: variable orderService of type com.fcs.be.modules.order.service.impl.OrderServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[148,32] cannot find symbol
+[ERROR]   symbol:   class OrderItemRequest
+[ERROR]   location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[149,35] cannot find symbol
+[ERROR]   symbol:   class OrderItemRequest
+[ERROR]   location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[154,45] cannot find symbol
+[ERROR]   symbol:   method updateOrderStatus(java.util.UUID,com.fcs.be.common.enums.OrderStatus)
+[ERROR]   location: variable orderService of type com.fcs.be.modules.order.service.impl.OrderServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[165,32] cannot find symbol
+[ERROR]   symbol:   class OrderItemRequest
+[ERROR]   location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[166,35] cannot find symbol
+[ERROR]   symbol:   class OrderItemRequest
+[ERROR]   location: class com.fcs.be.modules.order.dto.request.CreateOrderRequest
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/OrderServiceImplTest.java:[171,21] cannot find symbol
+[ERROR]   symbol:   method updateOrderStatus(java.util.UUID,com.fcs.be.common.enums.OrderStatus)
+[ERROR]   location: variable orderService of type com.fcs.be.modules.order.service.impl.OrderServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/order/service/impl/VoucherServiceImplTest.java:[122,32] cannot find symbol
+[ERROR]   symbol:   variable FIXED
+[ERROR]   location: class com.fcs.be.common.enums.VoucherDiscountType
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/product/service/impl/ProductServiceImplTest.java:[52,24] constructor CreateProductRequest in record com.fcs.be.modules.product.dto.request.CreateProductRequest cannot be applied to given types;
+[ERROR]   required: java.util.UUID,java.util.UUID,java.lang.String,java.lang.String,java.lang.String,java.math.BigDecimal,java.math.BigDecimal,java.math.BigDecimal,com.fcs.be.common.enums.ProductStatus
+[ERROR]   found:    java.lang.String,java.lang.String,java.lang.String,java.math.BigDecimal,java.math.BigDecimal,java.lang.String,com.fcs.be.common.enums.ProductStatus,java.util.UUID
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/product/service/impl/ProductServiceImplTest.java:[96,56] cannot find symbol
+[ERROR]   symbol:   method getProductsByOwner(java.util.UUID)
+[ERROR]   location: variable productService of type com.fcs.be.modules.product.service.impl.ProductServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/product/service/impl/ProductServiceImplTest.java:[105,46] constructor UpdateProductRequest in record com.fcs.be.modules.product.dto.request.UpdateProductRequest cannot be applied to given types;
+[ERROR]   required: java.util.UUID,java.lang.String,java.lang.String,java.math.BigDecimal,java.math.BigDecimal,java.math.BigDecimal
+[ERROR]   found:    java.lang.String,java.lang.String,java.math.BigDecimal,java.math.BigDecimal,java.lang.String
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/product/service/impl/ProductServiceImplTest.java:[125,56] cannot find symbol
+[ERROR]   symbol:   method getProductsByOwner(java.util.UUID)
+[ERROR]   location: variable productService of type com.fcs.be.modules.product.service.impl.ProductServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/product/service/impl/ProductServiceImplTest.java:[139,13] cannot find symbol
+[ERROR]   symbol:   method ownedBy(com.fcs.be.modules.iam.entity.User)
+[ERROR]   location: class com.fcs.be.modules.product.entity.Product.ProductBuilder<capture#3 of ?,capture#4 of ?>
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/product/service/impl/ProductServiceImplTest.java:[143,63] cannot find symbol
+[ERROR]   symbol:   method getSellingProducts()
+[ERROR]   location: variable productService of type com.fcs.be.modules.product.service.impl.ProductServiceImpl
+[ERROR] /d:/KY8/EXE/Fashion Consignment System/FCS_BE/src/test/java/com/fcs/be/modules/product/service/impl/ProductServiceImplTest.java:[152,56] cannot find symbol
+[ERROR]   symbol:   method getProductsByStatus(com.fcs.be.common.enums.ProductStatus)
+[ERROR]   location: variable productService of type com.fcs.be.modules.product.service.impl.ProductServiceImpl
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

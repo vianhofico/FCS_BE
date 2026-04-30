@@ -59,18 +59,26 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductResponse createProduct(CreateProductRequest request) {
-        Product product = new Product();
         ConsignmentItem consignmentItem = consignmentItemRepository.findByIdAndIsDeletedFalse(request.consignmentItemId())
             .orElseThrow(() -> new EntityNotFoundException("Consignment item not found"));
-        product.setConsignmentItem(consignmentItem);
-        applyBrand(product, request.brandId());
-        product.setSku(request.sku());
-        product.setName(request.name());
-        product.setDescription(request.description());
-        product.setConditionPercent(request.conditionPercent());
-        product.setOriginalPrice(request.originalPrice());
-        product.setSalePrice(request.salePrice());
-        product.setStatus(request.status());
+
+        Brand brand = null;
+        if (request.brandId() != null) {
+            brand = brandRepository.findByIdAndIsDeletedFalse(request.brandId())
+                .orElseThrow(() -> new EntityNotFoundException("Brand not found"));
+        }
+
+        Product product = Product.builder()
+            .consignmentItem(consignmentItem)
+            .brand(brand)
+            .sku(request.sku())
+            .name(request.name())
+            .description(request.description())
+            .conditionPercent(request.conditionPercent())
+            .originalPrice(request.originalPrice())
+            .salePrice(request.salePrice())
+            .status(request.status())
+            .build();
         Product saved = productRepository.save(product);
         appendStatusLog(saved, null, saved.getStatus(), "Product created");
         return productMapper.toResponse(saved);
@@ -123,12 +131,14 @@ public class ProductServiceImpl implements ProductService {
         product.setBrand(brand);
     }
 
+    @Transactional
     private void appendStatusLog(Product product, ProductStatus fromStatus, ProductStatus toStatus, String reason) {
-        ProductStatusHistory history = new ProductStatusHistory();
-        history.setProduct(product);
-        history.setFromStatus(fromStatus == null ? null : fromStatus.name());
-        history.setToStatus(toStatus.name());
-        history.setReason(reason);
+        ProductStatusHistory history = ProductStatusHistory.builder()
+            .product(product)
+            .fromStatus(fromStatus == null ? null : fromStatus.name())
+            .toStatus(toStatus.name())
+            .reason(reason)
+            .build();
         productStatusHistoryRepository.save(history);
     }
 }

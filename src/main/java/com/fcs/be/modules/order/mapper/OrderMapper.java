@@ -5,36 +5,17 @@ import com.fcs.be.modules.order.dto.response.OrderResponse;
 import com.fcs.be.modules.order.entity.Order;
 import com.fcs.be.modules.order.entity.OrderItem;
 import java.util.List;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class OrderMapper {
+@Mapper(componentModel = "spring")
+public interface OrderMapper {
 
-    public OrderResponse toResponse(Order order, List<OrderItem> items) {
-        return new OrderResponse(
-            order.getId(),
-            order.getBuyer().getId(),
-            order.getOrderCode(),
-            order.getSubTotal(),
-            order.getShippingFee(),
-            order.getDiscountAmount(),
-            order.getTotalAmount(),
-            order.getPaymentMethod(),
-            order.getShippingAddress() == null ? null : order.getShippingAddress().getId(),
-            order.getShippingSnapshot(),
-            order.getStatus(),
-            items.stream().map(this::toItemResponse).toList()
-        );
-    }
+    @Mapping(target = "buyerId", source = "order.buyer.id")
+    @Mapping(target = "shippingAddressId", source = "order.shippingAddress.id")
+    @Mapping(target = "items", source = "items")
+    OrderResponse toResponse(Order order, List<OrderItem> items);
 
-    private OrderItemResponse toItemResponse(OrderItem item) {
-        return new OrderItemResponse(
-            item.getId(),
-            item.getProduct().getId(),
-            item.getSkuSnapshot(),
-            item.getProductNameSnapshot(),
-            item.getConditionSnapshot(),
-            item.getPriceAtPurchase()
-        );
-    }
+    @Mapping(target = "productId", source = "product.id")
+    OrderItemResponse toItemResponse(OrderItem item);
 }

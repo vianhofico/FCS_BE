@@ -7,7 +7,6 @@ import com.fcs.be.modules.product.dto.request.UpdateProductRequest;
 import com.fcs.be.modules.product.dto.request.UpdateProductStatusRequest;
 import com.fcs.be.modules.product.dto.response.ProductResponse;
 import com.fcs.be.modules.product.service.interfaces.ProductService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -42,20 +41,12 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ProductResponse>> getProduct(@PathVariable UUID id) {
-        try {
-            return ResponseEntity.ok(ApiResponse.ok("Fetched product", productService.getProduct(id)));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok("Fetched product", productService.getProduct(id)));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<ProductResponse>> createProduct(@Valid @RequestBody CreateProductRequest request) {
-        try {
-            return ResponseEntity.ok(ApiResponse.ok("Product created", productService.createProduct(request)));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.badRequest().body(ApiResponse.error(ex.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok("Product created", productService.createProduct(request)));
     }
 
     @PutMapping("/{id}")
@@ -63,11 +54,7 @@ public class ProductController {
         @PathVariable UUID id,
         @Valid @RequestBody UpdateProductRequest request
     ) {
-        try {
-            return ResponseEntity.ok(ApiResponse.ok("Product updated", productService.updateProduct(id, request)));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.badRequest().body(ApiResponse.error(ex.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok("Product updated", productService.updateProduct(id, request)));
     }
 
     @PatchMapping("/{id}/status")
@@ -75,23 +62,14 @@ public class ProductController {
         @PathVariable UUID id,
         @Valid @RequestBody UpdateProductStatusRequest request
     ) {
-        try {
-            return ResponseEntity.ok(ApiResponse.ok(
-                "Product status updated",
-                productService.updateStatus(id, request.status(), request.reason())
-            ));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.badRequest().body(ApiResponse.error(ex.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok("Product status updated",
+            productService.updateStatus(id, request.status(), request.reason())));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable UUID id) {
-        try {
-            productService.deleteProduct(id);
-            return ResponseEntity.ok(ApiResponse.ok("Product deleted"));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
-        }
+        productService.deleteProduct(id);
+        return ResponseEntity.ok(ApiResponse.ok("Product deleted"));
     }
 }
+

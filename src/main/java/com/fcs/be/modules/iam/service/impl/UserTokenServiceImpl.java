@@ -1,6 +1,7 @@
 package com.fcs.be.modules.iam.service.impl;
 
 import com.fcs.be.modules.iam.dto.response.UserTokenPreviewResponse;
+import com.fcs.be.modules.iam.mapper.UserTokenPreviewMapper;
 import com.fcs.be.modules.iam.repository.UserRepository;
 import com.fcs.be.modules.iam.service.interfaces.JwtTokenService;
 import com.fcs.be.modules.iam.service.interfaces.UserTokenService;
@@ -14,10 +15,16 @@ public class UserTokenServiceImpl implements UserTokenService {
 
     private final UserRepository userRepository;
     private final JwtTokenService jwtTokenService;
+    private final UserTokenPreviewMapper userTokenPreviewMapper;
 
-    public UserTokenServiceImpl(UserRepository userRepository, JwtTokenService jwtTokenService) {
+    public UserTokenServiceImpl(
+        UserRepository userRepository,
+        JwtTokenService jwtTokenService,
+        UserTokenPreviewMapper userTokenPreviewMapper
+    ) {
         this.userRepository = userRepository;
         this.jwtTokenService = jwtTokenService;
+        this.userTokenPreviewMapper = userTokenPreviewMapper;
     }
 
     @Override
@@ -26,6 +33,6 @@ public class UserTokenServiceImpl implements UserTokenService {
             .orElseThrow(() -> new EntityNotFoundException("User not found"));
         String accessToken = jwtTokenService.generateAccessToken(userId, Map.of("scope", "preview"));
         String refreshToken = jwtTokenService.generateRefreshToken(userId, Map.of("scope", "preview"));
-        return new UserTokenPreviewResponse(accessToken, refreshToken);
+        return userTokenPreviewMapper.toResponse(accessToken, refreshToken);
     }
 }

@@ -2,18 +2,10 @@ package com.fcs.be.modules.catalog.mapper;
 
 import com.fcs.be.modules.catalog.dto.response.BrandResponse;
 import com.fcs.be.modules.catalog.entity.Brand;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
-@Component
-public class BrandMapper {
+@Mapper(componentModel = "spring")
+public interface BrandMapper {
 
-    public BrandResponse toBrandResponse(Brand brand) {
-        return new BrandResponse(
-            brand.getId(),
-            brand.getName(),
-            brand.getLogoUrl(),
-            brand.getDescription(),
-            brand.isActive()
-        );
-    }
+    BrandResponse toBrandResponse(Brand brand);
 }

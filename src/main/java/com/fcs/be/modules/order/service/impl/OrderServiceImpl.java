@@ -1,6 +1,13 @@
 package com.fcs.be.modules.order.service.impl;
 
 import com.fcs.be.common.enums.OrderStatus;
+import com.fcs.be.common.enums.ProductStatus;
+import com.fcs.be.common.enums.WalletTransactionType;
+import com.fcs.be.modules.consignment.entity.ConsignmentContract;
+import com.fcs.be.modules.consignment.repository.ConsignmentContractRepository;
+import com.fcs.be.modules.financial.entity.Wallet;
+import com.fcs.be.modules.financial.repository.WalletRepository;
+import com.fcs.be.modules.financial.service.interfaces.WalletService;
 import com.fcs.be.modules.iam.entity.User;
 import com.fcs.be.modules.iam.entity.UserAddress;
 import com.fcs.be.modules.iam.repository.UserAddressRepository;
@@ -18,6 +25,9 @@ import com.fcs.be.modules.order.service.interfaces.OrderService;
 import com.fcs.be.modules.product.entity.Product;
 import com.fcs.be.modules.product.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -33,6 +43,9 @@ public class OrderServiceImpl implements OrderService {
     private final UserAddressRepository userAddressRepository;
     private final ProductRepository productRepository;
     private final OrderMapper orderMapper;
+    private final ConsignmentContractRepository consignmentContractRepository;
+    private final WalletService walletService;
+    private final WalletRepository walletRepository;
 
     public OrderServiceImpl(
         OrderRepository orderRepository,
@@ -41,7 +54,10 @@ public class OrderServiceImpl implements OrderService {
         UserRepository userRepository,
         UserAddressRepository userAddressRepository,
         ProductRepository productRepository,
-        OrderMapper orderMapper
+        OrderMapper orderMapper,
+        ConsignmentContractRepository consignmentContractRepository,
+        WalletService walletService,
+        WalletRepository walletRepository
     ) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
@@ -50,6 +66,9 @@ public class OrderServiceImpl implements OrderService {
         this.userAddressRepository = userAddressRepository;
         this.productRepository = productRepository;
         this.orderMapper = orderMapper;
+        this.consignmentContractRepository = consignmentContractRepository;
+        this.walletService = walletService;
+        this.walletRepository = walletRepository;
     }
 
     @Override
@@ -57,12 +76,15 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders = status == null
             ? orderRepository.findByIsDeletedFalseOrderByCreatedAtDesc()
             : orderRepository.findByIsDeletedFalseAndStatusOrderByCreatedAtDesc(status);
-        return orders.stream().map(this::toResponse).toList();
+        return orders.stream()
+            .map(order -> orderMapper.toResponse(order, orderItemRepository.findByOrderIdAndIsDeletedFalse(order.getId())))
+            .toList();
     }
 
     @Override
     public OrderResponse getOrder(UUID id) {
-        return toResponse(getOrderEntity(id));
+        Order order = getOrderEntity(id);
+        return orderMapper.toResponse(order, orderItemRepository.findByOrderIdAndIsDeletedFalse(order.getId()));
     }
 
     @Override
@@ -70,38 +92,48 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponse createOrder(CreateOrderRequest request) {
         User buyer = userRepository.findByIdAndIsDeletedFalse(request.buyerId())
             .orElseThrow(() -> new EntityNotFoundException("Buyer not found"));
-        Order order = new Order();
-        order.setBuyer(buyer);
-        order.setOrderCode("ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-        order.setSubTotal(request.subTotal());
-        order.setShippingFee(request.shippingFee());
-        order.setDiscountAmount(request.discountAmount());
-        order.setTotalAmount(request.totalAmount());
-        order.setPaymentMethod(request.paymentMethod());
-        order.setShippingSnapshot(request.shippingSnapshot());
-        order.setStatus(OrderStatus.PENDING_PAYMENT);
-        if (request.shippingAddressId() != null) {
-            UserAddress address = userAddressRepository.findByIdAndIsDeletedFalse(request.shippingAddressId())
-                .orElseThrow(() -> new EntityNotFoundException("Shipping address not found"));
-            order.setShippingAddress(address);
-        }
+        Order order = Order.builder()
+            .buyer(buyer)
+            .orderCode("ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase())
+            .subTotal(request.subTotal())
+            .shippingFee(request.shippingFee())
+            .discountAmount(request.discountAmount())
+            .totalAmount(request.totalAmount())
+            .paymentMethod(request.paymentMethod())
+            .shippingSnapshot(request.shippingSnapshot())
+            .status(OrderStatus.PENDING_PAYMENT)
+            .shippingAddress(request.shippingAddressId() != null
+                ? userAddressRepository.findByIdAndIsDeletedFalse(request.shippingAddressId())
+                    .orElseThrow(() -> new EntityNotFoundException("Shipping address not found"))
+                : null)
+            .build();
         Order savedOrder = orderRepository.save(order);
 
         for (UUID productId : request.productIds()) {
             Product product = productRepository.findByIdAndIsDeletedFalse(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found: " + productId));
-            OrderItem item = new OrderItem();
-            item.setOrder(savedOrder);
-            item.setProduct(product);
-            item.setSkuSnapshot(product.getSku());
-            item.setProductNameSnapshot(product.getName());
-            item.setConditionSnapshot(product.getConditionPercent().toPlainString());
-            item.setPriceAtPurchase(product.getSalePrice());
+
+            if (product.getStatus() != ProductStatus.SELLING) {
+                throw new IllegalStateException("Product is not available for purchase: " + product.getSku());
+            }
+
+            product.setStatus(ProductStatus.RESERVED);
+            product.setReservedUntil(Instant.now().plus(30, ChronoUnit.MINUTES));
+            productRepository.save(product);
+
+            OrderItem item = OrderItem.builder()
+                .order(savedOrder)
+                .product(product)
+                .skuSnapshot(product.getSku())
+                .productNameSnapshot(product.getName())
+                .conditionSnapshot(product.getConditionPercent().toPlainString())
+                .priceAtPurchase(product.getSalePrice())
+                .build();
             orderItemRepository.save(item);
         }
 
         appendStatusLog(savedOrder, null, OrderStatus.PENDING_PAYMENT, "Order created");
-        return toResponse(savedOrder);
+        return orderMapper.toResponse(savedOrder, orderItemRepository.findByOrderIdAndIsDeletedFalse(savedOrder.getId()));
     }
 
     @Override
@@ -110,9 +142,64 @@ public class OrderServiceImpl implements OrderService {
         Order order = getOrderEntity(id);
         OrderStatus oldStatus = order.getStatus();
         order.setStatus(status);
+
+        if (status == OrderStatus.COMPLETED && oldStatus != OrderStatus.COMPLETED) {
+            handleOrderCompletion(order);
+        } else if ((status == OrderStatus.CANCELLED || status == OrderStatus.REFUNDED)
+                && (oldStatus != OrderStatus.CANCELLED && oldStatus != OrderStatus.REFUNDED)) {
+            handleOrderCancellation(order);
+        }
+
         Order saved = orderRepository.save(order);
         appendStatusLog(saved, oldStatus, status, reason);
-        return toResponse(saved);
+        return orderMapper.toResponse(saved, orderItemRepository.findByOrderIdAndIsDeletedFalse(saved.getId()));
+    }
+
+    @Transactional
+    private void handleOrderCompletion(Order order) {
+        List<OrderItem> items = orderItemRepository.findByOrderIdAndIsDeletedFalse(order.getId());
+        for (OrderItem item : items) {
+            Product product = item.getProduct();
+            product.setStatus(ProductStatus.SOLD);
+            product.setReservedUntil(null);
+            productRepository.save(product);
+
+            // Calculate revenue and pay consignor
+            ConsignmentContract contract = consignmentContractRepository
+                .findByRequestIdAndIsDeletedFalse(product.getConsignmentItem().getRequest().getId())
+                .orElse(null);
+
+            if (contract != null) {
+                // Commission rate is in decimal (e.g. 0.20 for 20%)
+                BigDecimal commission = item.getPriceAtPurchase().multiply(contract.getCommissionRate());
+                BigDecimal consignorRevenue = item.getPriceAtPurchase().subtract(commission);
+
+                User consignor = product.getConsignmentItem().getRequest().getConsignor();
+                Wallet wallet = walletRepository.findByUserIdAndIsDeletedFalse(consignor.getId())
+                    .orElseThrow(() -> new IllegalStateException("Consignor wallet not found"));
+
+                walletService.recordTransaction(
+                    wallet.getId(),
+                    WalletTransactionType.SALE_REVENUE,
+                    consignorRevenue,
+                    "Revenue from sale of product " + product.getSku(),
+                    "ORDER_ITEM",
+                    item.getId()
+                );
+            }
+        }
+    }
+
+    private void handleOrderCancellation(Order order) {
+        List<OrderItem> items = orderItemRepository.findByOrderIdAndIsDeletedFalse(order.getId());
+        for (OrderItem item : items) {
+            Product product = item.getProduct();
+            if (product.getStatus() == ProductStatus.RESERVED || product.getStatus() == ProductStatus.SOLD) {
+                product.setStatus(ProductStatus.SELLING);
+                product.setReservedUntil(null);
+                productRepository.save(product);
+            }
+        }
     }
 
     @Override
@@ -128,16 +215,14 @@ public class OrderServiceImpl implements OrderService {
             .orElseThrow(() -> new EntityNotFoundException("Order not found"));
     }
 
-    private OrderResponse toResponse(Order order) {
-        return orderMapper.toResponse(order, orderItemRepository.findByOrderIdAndIsDeletedFalse(order.getId()));
-    }
-
+    @Transactional
     private void appendStatusLog(Order order, OrderStatus fromStatus, OrderStatus toStatus, String reason) {
-        OrderStatusHistory history = new OrderStatusHistory();
-        history.setOrder(order);
-        history.setFromStatus(fromStatus == null ? null : fromStatus.name());
-        history.setToStatus(toStatus.name());
-        history.setReason(reason);
+        OrderStatusHistory history = OrderStatusHistory.builder()
+            .order(order)
+            .fromStatus(fromStatus == null ? null : fromStatus.name())
+            .toStatus(toStatus.name())
+            .reason(reason)
+            .build();
         orderStatusHistoryRepository.save(history);
     }
 }

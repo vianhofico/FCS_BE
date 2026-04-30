@@ -11,4 +11,6 @@ public interface WalletRepository extends JpaRepository<Wallet, UUID> {
     List<Wallet> findByIsDeletedFalseOrderByCreatedAtDesc();
 
     Optional<Wallet> findByIdAndIsDeletedFalse(UUID id);
+
+    Optional<Wallet> findByUserIdAndIsDeletedFalse(UUID userId);
 }

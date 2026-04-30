@@ -2,21 +2,16 @@ package com.fcs.be.modules.notification.mapper;
 
 import com.fcs.be.modules.notification.dto.response.UserNotificationResponse;
 import com.fcs.be.modules.notification.entity.UserNotification;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class UserNotificationMapper {
+@Mapper(componentModel = "spring")
+public interface UserNotificationMapper {
 
-    public UserNotificationResponse toResponse(UserNotification userNotification) {
-        return new UserNotificationResponse(
-            userNotification.getId(),
-            userNotification.getUser().getId(),
-            userNotification.getNotification().getId(),
-            userNotification.getNotification().getTitle(),
-            userNotification.getNotification().getContent(),
-            userNotification.getNotification().getType(),
-            userNotification.isRead(),
-            userNotification.getReadAt()
-        );
-    }
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "notificationId", source = "notification.id")
+    @Mapping(target = "title", source = "notification.title")
+    @Mapping(target = "content", source = "notification.content")
+    @Mapping(target = "type", source = "notification.type")
+    UserNotificationResponse toResponse(UserNotification userNotification);
 }

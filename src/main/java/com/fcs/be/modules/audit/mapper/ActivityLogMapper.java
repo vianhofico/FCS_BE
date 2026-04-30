@@ -2,23 +2,12 @@ package com.fcs.be.modules.audit.mapper;
 
 import com.fcs.be.modules.audit.dto.response.ActivityLogResponse;
 import com.fcs.be.modules.audit.entity.ActivityLog;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class ActivityLogMapper {
+@Mapper(componentModel = "spring")
+public interface ActivityLogMapper {
 
-    public ActivityLogResponse toResponse(ActivityLog activityLog) {
-        return new ActivityLogResponse(
-            activityLog.getId(),
-            activityLog.getUser() == null ? null : activityLog.getUser().getId(),
-            activityLog.getAction(),
-            activityLog.getEntityName(),
-            activityLog.getEntityId(),
-            activityLog.getOldValues(),
-            activityLog.getNewValues(),
-            activityLog.getIpAddress(),
-            activityLog.getUserAgent(),
-            activityLog.getCreatedAt()
-        );
-    }
+    @Mapping(target = "userId", source = "user.id")
+    ActivityLogResponse toResponse(ActivityLog activityLog);
 }

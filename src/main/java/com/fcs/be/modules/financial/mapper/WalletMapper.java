@@ -2,20 +2,12 @@ package com.fcs.be.modules.financial.mapper;
 
 import com.fcs.be.modules.financial.dto.response.WalletResponse;
 import com.fcs.be.modules.financial.entity.Wallet;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class WalletMapper {
+@Mapper(componentModel = "spring")
+public interface WalletMapper {
 
-    public WalletResponse toWalletResponse(Wallet wallet) {
-        return new WalletResponse(
-            wallet.getId(),
-            wallet.getUser().getId(),
-            wallet.getBalance(),
-            wallet.getAvailableBalance(),
-            wallet.getBankName(),
-            wallet.getBankAccountName(),
-            wallet.getBankAccountNumber()
-        );
-    }
+    @Mapping(target = "userId", source = "user.id")
+    WalletResponse toWalletResponse(Wallet wallet);
 }

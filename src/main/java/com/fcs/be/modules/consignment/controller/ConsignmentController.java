@@ -7,7 +7,6 @@ import com.fcs.be.modules.consignment.dto.request.UpdateConsignmentRequest;
 import com.fcs.be.modules.consignment.dto.request.UpdateConsignmentStatusRequest;
 import com.fcs.be.modules.consignment.dto.response.ConsignmentResponse;
 import com.fcs.be.modules.consignment.service.interfaces.ConsignmentService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -42,22 +41,14 @@ public class ConsignmentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ConsignmentResponse>> getConsignment(@PathVariable UUID id) {
-        try {
-            return ResponseEntity.ok(ApiResponse.ok("Fetched consignment", consignmentService.getConsignment(id)));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok("Fetched consignment", consignmentService.getConsignment(id)));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<ConsignmentResponse>> createConsignment(
         @Valid @RequestBody CreateConsignmentRequest request
     ) {
-        try {
-            return ResponseEntity.ok(ApiResponse.ok("Consignment created", consignmentService.createConsignment(request)));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.badRequest().body(ApiResponse.error(ex.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok("Consignment created", consignmentService.createConsignment(request)));
     }
 
     @PutMapping("/{id}")
@@ -65,11 +56,7 @@ public class ConsignmentController {
         @PathVariable UUID id,
         @Valid @RequestBody UpdateConsignmentRequest request
     ) {
-        try {
-            return ResponseEntity.ok(ApiResponse.ok("Consignment updated", consignmentService.updateConsignment(id, request)));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok("Consignment updated", consignmentService.updateConsignment(id, request)));
     }
 
     @PatchMapping("/{id}/status")
@@ -77,23 +64,15 @@ public class ConsignmentController {
         @PathVariable UUID id,
         @Valid @RequestBody UpdateConsignmentStatusRequest request
     ) {
-        try {
-            return ResponseEntity.ok(ApiResponse.ok(
-                "Consignment status updated",
-                consignmentService.updateStatus(id, request.status(), request.reason())
-            ));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok(
+            "Consignment status updated",
+            consignmentService.updateStatus(id, request.status(), request.reason())
+        ));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteConsignment(@PathVariable UUID id) {
-        try {
-            consignmentService.deleteConsignment(id);
-            return ResponseEntity.ok(ApiResponse.ok("Consignment deleted"));
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(404).body(ApiResponse.error(ex.getMessage()));
-        }
+        consignmentService.deleteConsignment(id);
+        return ResponseEntity.ok(ApiResponse.ok("Consignment deleted"));
     }
 }
