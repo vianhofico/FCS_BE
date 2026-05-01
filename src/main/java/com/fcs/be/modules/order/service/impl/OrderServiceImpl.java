@@ -12,7 +12,10 @@ import com.fcs.be.modules.iam.entity.User;
 import com.fcs.be.modules.iam.entity.UserAddress;
 import com.fcs.be.modules.iam.repository.UserAddressRepository;
 import com.fcs.be.modules.iam.repository.UserRepository;
+import com.fcs.be.common.response.PageResponse;
 import com.fcs.be.modules.order.dto.request.CreateOrderRequest;
+import com.fcs.be.modules.order.dto.request.OrderFilterRequest;
+import com.fcs.be.modules.order.repository.OrderSpecification;
 import com.fcs.be.modules.order.dto.response.OrderResponse;
 import com.fcs.be.modules.order.entity.Order;
 import com.fcs.be.modules.order.entity.OrderItem;
@@ -30,8 +33,11 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fcs.be.modules.order.dto.request.UpdateOrderTrackingRequest;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -72,13 +78,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponse> getOrders(OrderStatus status) {
-        List<Order> orders = status == null
-            ? orderRepository.findByIsDeletedFalseOrderByCreatedAtDesc()
-            : orderRepository.findByIsDeletedFalseAndStatusOrderByCreatedAtDesc(status);
-        return orders.stream()
-            .map(order -> orderMapper.toResponse(order, orderItemRepository.findByOrderIdAndIsDeletedFalse(order.getId())))
-            .toList();
+    public PageResponse<OrderResponse> getOrders(OrderFilterRequest filter, Pageable pageable) {
+        return PageResponse.of(
+            orderRepository.findAll(OrderSpecification.from(filter), pageable)
+                .map(order -> orderMapper.toResponse(order, orderItemRepository.findByOrderIdAndIsDeletedFalse(order.getId())))
+        );
     }
 
     @Override
@@ -200,6 +204,20 @@ public class OrderServiceImpl implements OrderService {
                 productRepository.save(product);
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public OrderResponse updateTracking(UUID id, UpdateOrderTrackingRequest request) {
+        Order order = getOrderEntity(id);
+        order.setTrackingNumber(request.trackingNumber());
+        order.setShippingProvider(request.shippingProvider());
+        if (order.getStatus() == OrderStatus.PACKING) {
+            order.setStatus(OrderStatus.SHIPPED);
+            appendStatusLog(order, OrderStatus.PACKING, OrderStatus.SHIPPED, "Updated tracking number");
+        }
+        Order saved = orderRepository.save(order);
+        return orderMapper.toResponse(saved, orderItemRepository.findByOrderIdAndIsDeletedFalse(saved.getId()));
     }
 
     @Override

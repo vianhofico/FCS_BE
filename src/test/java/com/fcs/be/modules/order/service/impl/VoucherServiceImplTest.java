@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@Transactional
 class VoucherServiceImplTest {
 
     @Autowired
@@ -99,9 +101,9 @@ class VoucherServiceImplTest {
             VoucherStatus.ACTIVE
         ));
 
-        List<VoucherResponse> responses = voucherService.getVouchers();
+        var pageResponse = voucherService.getVouchers(org.springframework.data.domain.PageRequest.of(0, 20));
 
-        assertEquals(2, responses.size());
+        assertEquals(2, pageResponse.content().size());
     }
 
     @Test
@@ -114,7 +116,7 @@ class VoucherServiceImplTest {
             new BigDecimal("500000")
         );
 
-        assertEquals(new BigDecimal("50000"), discount);
+        assertEquals(0, new BigDecimal("50000").compareTo(discount));
     }
 
     @Test
@@ -139,7 +141,7 @@ class VoucherServiceImplTest {
             new BigDecimal("1000000")
         );
 
-        assertEquals(new BigDecimal("100000"), discount);
+        assertEquals(0, new BigDecimal("100000").compareTo(discount));
     }
 
     @Test

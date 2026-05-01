@@ -1,22 +1,26 @@
 package com.fcs.be.modules.product.service.impl;
 
 import com.fcs.be.common.enums.ProductStatus;
+import com.fcs.be.common.response.PageResponse;
 import com.fcs.be.modules.catalog.entity.Brand;
 import com.fcs.be.modules.catalog.repository.BrandRepository;
 import com.fcs.be.modules.consignment.entity.ConsignmentItem;
 import com.fcs.be.modules.consignment.repository.ConsignmentItemRepository;
 import com.fcs.be.modules.product.dto.request.CreateProductRequest;
+import com.fcs.be.modules.product.dto.request.ProductFilterRequest;
 import com.fcs.be.modules.product.dto.request.UpdateProductRequest;
 import com.fcs.be.modules.product.dto.response.ProductResponse;
 import com.fcs.be.modules.product.entity.Product;
 import com.fcs.be.modules.product.entity.ProductStatusHistory;
 import com.fcs.be.modules.product.mapper.ProductMapper;
 import com.fcs.be.modules.product.repository.ProductRepository;
+import com.fcs.be.modules.product.repository.ProductSpecification;
 import com.fcs.be.modules.product.repository.ProductStatusHistoryRepository;
 import com.fcs.be.modules.product.service.interfaces.ProductService;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,11 +48,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> getProducts(ProductStatus status) {
-        List<Product> products = status == null
-            ? productRepository.findByIsDeletedFalseOrderByCreatedAtDesc()
-            : productRepository.findByIsDeletedFalseAndStatusOrderByCreatedAtDesc(status);
-        return products.stream().map(productMapper::toResponse).toList();
+    public PageResponse<ProductResponse> getProducts(ProductFilterRequest filter, Pageable pageable) {
+        Page<ProductResponse> page = productRepository
+            .findAll(ProductSpecification.from(filter), pageable)
+            .map(productMapper::toResponse);
+        return PageResponse.of(page);
     }
 
     @Override

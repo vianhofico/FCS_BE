@@ -48,4 +48,17 @@ public class AuthController {
         authService.logout(userId);
         return ResponseEntity.ok(ApiResponse.ok("Logged out successfully"));
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResponse<Void>> forgotPassword(@Valid @RequestBody com.fcs.be.modules.iam.dto.request.ForgotPasswordRequest request) {
+        authService.forgotPassword(request);
+        return ResponseEntity.ok(ApiResponse.ok("If the email is registered, a password reset link has been sent."));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse<Void>> resetPassword(@Valid @RequestBody com.fcs.be.modules.iam.dto.request.ResetPasswordRequest request) {
+        authService.resetPassword(request);
+        return ResponseEntity.ok(ApiResponse.ok("Password reset successfully."));
+    }
 }
+

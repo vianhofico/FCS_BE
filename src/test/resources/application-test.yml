@@ -8,6 +8,13 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: false
+  mail:
+    host: localhost
+    port: 9999
+  data:
+    redis:
+      host: localhost
+      port: 16379
   security:
     oauth2:
       client:

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@Transactional
 class ConsignmentServiceImplTest {
 
     @Autowired
@@ -107,9 +109,11 @@ class ConsignmentServiceImplTest {
 
         consignmentService.createConsignment(request);
 
-        List<ConsignmentResponse> responses = consignmentService.getConsignments(ConsignmentRequestStatus.DRAFT);
+        var pageResponse = consignmentService.getConsignments(
+            new com.fcs.be.modules.consignment.dto.request.ConsignmentFilterRequest(null, null, ConsignmentRequestStatus.DRAFT, null, null),
+            org.springframework.data.domain.PageRequest.of(0, 20));
 
-        assertEquals(1, responses.size());
+        assertEquals(1, pageResponse.content().size());
     }
 
     @Test

@@ -2,14 +2,18 @@ package com.fcs.be.modules.product.controller;
 
 import com.fcs.be.common.enums.ProductStatus;
 import com.fcs.be.common.response.ApiResponse;
+import com.fcs.be.common.response.PageResponse;
 import com.fcs.be.modules.product.dto.request.CreateProductRequest;
+import com.fcs.be.modules.product.dto.request.ProductFilterRequest;
 import com.fcs.be.modules.product.dto.request.UpdateProductRequest;
 import com.fcs.be.modules.product.dto.request.UpdateProductStatusRequest;
 import com.fcs.be.modules.product.dto.response.ProductResponse;
 import com.fcs.be.modules.product.service.interfaces.ProductService;
 import jakarta.validation.Valid;
-import java.util.List;
+import java.math.BigDecimal;
 import java.util.UUID;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,10 +37,21 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ProductResponse>>> getProducts(
-        @RequestParam(required = false) ProductStatus status
+    public ResponseEntity<ApiResponse<PageResponse<ProductResponse>>> getProducts(
+        @RequestParam(required = false) String keyword,
+        @RequestParam(required = false) UUID brandId,
+        @RequestParam(required = false) UUID categoryId,
+        @RequestParam(required = false) BigDecimal minPrice,
+        @RequestParam(required = false) BigDecimal maxPrice,
+        @RequestParam(required = false) BigDecimal minCondition,
+        @RequestParam(required = false) BigDecimal maxCondition,
+        @RequestParam(required = false) ProductStatus status,
+        @PageableDefault(size = 20) Pageable pageable
     ) {
-        return ResponseEntity.ok(ApiResponse.ok("Fetched products", productService.getProducts(status)));
+        ProductFilterRequest filter = new ProductFilterRequest(
+            keyword, brandId, categoryId, minPrice, maxPrice, minCondition, maxCondition, status
+        );
+        return ResponseEntity.ok(ApiResponse.ok("Fetched products", productService.getProducts(filter, pageable)));
     }
 
     @GetMapping("/{id}")
@@ -72,4 +87,5 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.ok("Product deleted"));
     }
 }
+
 

@@ -60,4 +60,10 @@ public class Order extends SoftDeleteEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 30)
     private OrderStatus status;
+
+    @Column(name = "tracking_number", length = 100)
+    private String trackingNumber;
+
+    @Column(name = "shipping_provider", length = 100)
+    private String shippingProvider;
 }

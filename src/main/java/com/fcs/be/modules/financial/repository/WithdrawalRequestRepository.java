@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface WithdrawalRequestRepository extends JpaRepository<WithdrawalRequest, UUID> {
+public interface WithdrawalRequestRepository extends JpaRepository<WithdrawalRequest, UUID>, JpaSpecificationExecutor<WithdrawalRequest> {
 
     Optional<WithdrawalRequest> findByIdAndIsDeletedFalse(UUID id);
 

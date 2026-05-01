@@ -2,11 +2,14 @@ package com.fcs.be.modules.iam.service.impl;
 
 import com.fcs.be.common.enums.AuthProvider;
 import com.fcs.be.common.enums.UserStatus;
+import com.fcs.be.common.service.email.EmailService;
 import com.fcs.be.modules.financial.entity.Wallet;
 import com.fcs.be.modules.financial.repository.WalletRepository;
+import com.fcs.be.modules.iam.dto.request.ForgotPasswordRequest;
 import com.fcs.be.modules.iam.dto.request.LoginRequest;
 import com.fcs.be.modules.iam.dto.request.RefreshTokenRequest;
 import com.fcs.be.modules.iam.dto.request.RegisterRequest;
+import com.fcs.be.modules.iam.dto.request.ResetPasswordRequest;
 import com.fcs.be.modules.iam.dto.response.AuthResponse;
 import com.fcs.be.modules.iam.entity.AuthIdentity;
 import com.fcs.be.modules.iam.entity.RefreshToken;
@@ -29,7 +32,10 @@ import java.time.Instant;
 import java.util.HexFormat;
 import java.util.Map;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,6 +52,8 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRoleRepository userRoleRepository;
     private final AuthMapper authMapper;
+    private final StringRedisTemplate redisTemplate;
+    private final EmailService emailService;
 
     public AuthServiceImpl(
         UserRepository userRepository,
@@ -55,7 +63,9 @@ public class AuthServiceImpl implements AuthService {
         JwtTokenService jwtTokenService,
         PasswordEncoder passwordEncoder,
         UserRoleRepository userRoleRepository,
-        AuthMapper authMapper
+        AuthMapper authMapper,
+        StringRedisTemplate redisTemplate,
+        EmailService emailService
     ) {
         this.userRepository = userRepository;
         this.authIdentityRepository = authIdentityRepository;
@@ -65,6 +75,8 @@ public class AuthServiceImpl implements AuthService {
         this.passwordEncoder = passwordEncoder;
         this.userRoleRepository = userRoleRepository;
         this.authMapper = authMapper;
+        this.redisTemplate = redisTemplate;
+        this.emailService = emailService;
     }
 
     @Override
@@ -197,5 +209,53 @@ public class AuthServiceImpl implements AuthService {
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("SHA-256 not available", e);
         }
+    }
+
+    @Override
+    public void forgotPassword(ForgotPasswordRequest request) {
+        Optional<User> userOpt = userRepository.findByUsernameOrEmail(request.email());
+        if (userOpt.isEmpty()) {
+            return; // Silently return to prevent email enumeration
+        }
+        User user = userOpt.get();
+
+        String token = UUID.randomUUID().toString();
+        String redisKey = "pwd_reset:" + token;
+
+        // Save to Redis with 15 mins TTL
+        redisTemplate.opsForValue().set(redisKey, user.getId().toString(), 15, TimeUnit.MINUTES);
+
+        // Generate reset link (assuming frontend is running on localhost:3000, should be in config in a real app)
+        String resetLink = "http://localhost:3000/reset-password?token=" + token;
+
+        emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(ResetPasswordRequest request) {
+        String redisKey = "pwd_reset:" + request.token();
+        String userIdStr = redisTemplate.opsForValue().get(redisKey);
+
+        if (userIdStr == null) {
+            throw new IllegalArgumentException("Invalid or expired reset token");
+        }
+
+        UUID userId = UUID.fromString(userIdStr);
+        User user = userRepository.findByIdAndIsDeletedFalse(userId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
+
+        user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+
+        // Also update AuthIdentity if present
+        authIdentityRepository.findByUserIdAndProvider(userId, AuthProvider.LOCAL)
+            .ifPresent(identity -> {
+                identity.setPasswordHash(passwordEncoder.encode(request.newPassword()));
+                authIdentityRepository.save(identity);
+            });
+
+        // Delete token after successful reset
+        redisTemplate.delete(redisKey);
     }
 }

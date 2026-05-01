@@ -1,13 +1,18 @@
 package com.fcs.be.modules.financial.controller;
 
+import com.fcs.be.common.enums.WithdrawalStatus;
 import com.fcs.be.common.response.ApiResponse;
+import com.fcs.be.common.response.PageResponse;
 import com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest;
 import com.fcs.be.modules.financial.dto.request.UpdateWithdrawalStatusRequest;
+import com.fcs.be.modules.financial.dto.request.WithdrawalFilterRequest;
 import com.fcs.be.modules.financial.dto.response.WithdrawalRequestResponse;
 import com.fcs.be.modules.financial.service.interfaces.WithdrawalService;
 import jakarta.validation.Valid;
-import java.util.List;
+import java.time.Instant;
 import java.util.UUID;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,8 +34,15 @@ public class WithdrawalController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<WithdrawalRequestResponse>>> getWithdrawals() {
-        return ResponseEntity.ok(ApiResponse.ok("Fetched withdrawals", withdrawalService.getWithdrawals()));
+    public ResponseEntity<ApiResponse<PageResponse<WithdrawalRequestResponse>>> getWithdrawals(
+        @RequestParam(required = false) UUID walletId,
+        @RequestParam(required = false) WithdrawalStatus status,
+        @RequestParam(required = false) Instant startDate,
+        @RequestParam(required = false) Instant endDate,
+        @PageableDefault(size = 20) Pageable pageable
+    ) {
+        WithdrawalFilterRequest filter = new WithdrawalFilterRequest(walletId, status, startDate, endDate);
+        return ResponseEntity.ok(ApiResponse.ok("Fetched withdrawals", withdrawalService.getWithdrawals(filter, pageable)));
     }
 
     @GetMapping("/{id}")
@@ -53,3 +66,4 @@ public class WithdrawalController {
         return ResponseEntity.ok(ApiResponse.ok("Withdrawal status updated", withdrawalService.updateStatus(id, request, null)));
     }
 }
+

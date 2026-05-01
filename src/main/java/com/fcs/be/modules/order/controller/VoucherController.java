@@ -1,15 +1,18 @@
 package com.fcs.be.modules.order.controller;
 
 import com.fcs.be.common.response.ApiResponse;
+import com.fcs.be.common.response.PageResponse;
 import com.fcs.be.modules.order.dto.request.CreateVoucherRequest;
 import com.fcs.be.modules.order.dto.response.VoucherResponse;
 import com.fcs.be.modules.order.service.interfaces.VoucherService;
 import jakarta.validation.Valid;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,13 +38,23 @@ public class VoucherController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<VoucherResponse>>> getVouchers() {
-        return ResponseEntity.ok(ApiResponse.ok("Fetched vouchers", voucherService.getVouchers()));
+    public ResponseEntity<ApiResponse<PageResponse<VoucherResponse>>> getVouchers(
+        @PageableDefault(size = 20) Pageable pageable
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok("Fetched vouchers", voucherService.getVouchers(pageable)));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<VoucherResponse>> getVoucher(@PathVariable UUID id) {
         return ResponseEntity.ok(ApiResponse.ok("Fetched voucher", voucherService.getVoucher(id)));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ApiResponse<VoucherResponse>> updateStatus(
+        @PathVariable UUID id,
+        @Valid @RequestBody com.fcs.be.modules.order.dto.request.UpdateVoucherStatusRequest request
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok("Voucher status updated", voucherService.updateStatus(id, request.status())));
     }
 
     @GetMapping("/validate")
@@ -54,3 +67,4 @@ public class VoucherController {
             voucherService.validateAndCalculateDiscount(code, userId, orderAmount)));
     }
 }
+

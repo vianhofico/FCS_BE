@@ -1,6 +1,8 @@
 package com.fcs.be.modules.consignment.service.impl;
 
 import com.fcs.be.common.enums.ConsignmentRequestStatus;
+import com.fcs.be.common.response.PageResponse;
+import com.fcs.be.modules.consignment.dto.request.ConsignmentFilterRequest;
 import com.fcs.be.modules.consignment.dto.request.CreateConsignmentRequest;
 import com.fcs.be.modules.consignment.dto.request.UpdateConsignmentRequest;
 import com.fcs.be.modules.consignment.dto.response.ConsignmentResponse;
@@ -8,13 +10,14 @@ import com.fcs.be.modules.consignment.entity.ConsignmentRequest;
 import com.fcs.be.modules.consignment.entity.ConsignmentStatusHistory;
 import com.fcs.be.modules.consignment.mapper.ConsignmentMapper;
 import com.fcs.be.modules.consignment.repository.ConsignmentRequestRepository;
+import com.fcs.be.modules.consignment.repository.ConsignmentSpecification;
 import com.fcs.be.modules.consignment.repository.ConsignmentStatusHistoryRepository;
 import com.fcs.be.modules.consignment.service.interfaces.ConsignmentService;
 import com.fcs.be.modules.iam.entity.User;
 import com.fcs.be.modules.iam.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,11 +42,11 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public List<ConsignmentResponse> getConsignments(ConsignmentRequestStatus status) {
-        List<ConsignmentRequest> requests = status == null
-            ? consignmentRequestRepository.findByIsDeletedFalseOrderByCreatedAtDesc()
-            : consignmentRequestRepository.findByIsDeletedFalseAndStatusOrderByCreatedAtDesc(status);
-        return requests.stream().map(consignmentMapper::toResponse).toList();
+    public PageResponse<ConsignmentResponse> getConsignments(ConsignmentFilterRequest filter, Pageable pageable) {
+        return PageResponse.of(
+            consignmentRequestRepository.findAll(ConsignmentSpecification.from(filter), pageable)
+                .map(consignmentMapper::toResponse)
+        );
     }
 
     @Override

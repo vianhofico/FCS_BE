@@ -2,14 +2,18 @@ package com.fcs.be.modules.consignment.controller;
 
 import com.fcs.be.common.enums.ConsignmentRequestStatus;
 import com.fcs.be.common.response.ApiResponse;
+import com.fcs.be.common.response.PageResponse;
+import com.fcs.be.modules.consignment.dto.request.ConsignmentFilterRequest;
 import com.fcs.be.modules.consignment.dto.request.CreateConsignmentRequest;
 import com.fcs.be.modules.consignment.dto.request.UpdateConsignmentRequest;
 import com.fcs.be.modules.consignment.dto.request.UpdateConsignmentStatusRequest;
 import com.fcs.be.modules.consignment.dto.response.ConsignmentResponse;
 import com.fcs.be.modules.consignment.service.interfaces.ConsignmentService;
 import jakarta.validation.Valid;
-import java.util.List;
+import java.time.Instant;
 import java.util.UUID;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,10 +37,16 @@ public class ConsignmentController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ConsignmentResponse>>> getConsignments(
-        @RequestParam(required = false) ConsignmentRequestStatus status
+    public ResponseEntity<ApiResponse<PageResponse<ConsignmentResponse>>> getConsignments(
+        @RequestParam(required = false) String code,
+        @RequestParam(required = false) UUID consignorId,
+        @RequestParam(required = false) ConsignmentRequestStatus status,
+        @RequestParam(required = false) Instant startDate,
+        @RequestParam(required = false) Instant endDate,
+        @PageableDefault(size = 20) Pageable pageable
     ) {
-        return ResponseEntity.ok(ApiResponse.ok("Fetched consignments", consignmentService.getConsignments(status)));
+        ConsignmentFilterRequest filter = new ConsignmentFilterRequest(code, consignorId, status, startDate, endDate);
+        return ResponseEntity.ok(ApiResponse.ok("Fetched consignments", consignmentService.getConsignments(filter, pageable)));
     }
 
     @GetMapping("/{id}")
@@ -76,3 +86,4 @@ public class ConsignmentController {
         return ResponseEntity.ok(ApiResponse.ok("Consignment deleted"));
     }
 }
+

@@ -2,8 +2,10 @@ package com.fcs.be.modules.financial.service.impl;
 
 import com.fcs.be.common.enums.WalletTransactionType;
 import com.fcs.be.common.enums.WithdrawalStatus;
+import com.fcs.be.common.response.PageResponse;
 import com.fcs.be.modules.financial.dto.request.CreateWithdrawalRequest;
 import com.fcs.be.modules.financial.dto.request.UpdateWithdrawalStatusRequest;
+import com.fcs.be.modules.financial.dto.request.WithdrawalFilterRequest;
 import com.fcs.be.modules.financial.dto.response.WithdrawalRequestResponse;
 import com.fcs.be.modules.financial.entity.Wallet;
 import com.fcs.be.modules.financial.entity.WithdrawalRequest;
@@ -11,6 +13,7 @@ import com.fcs.be.modules.financial.entity.WithdrawalStatusHistory;
 import com.fcs.be.modules.financial.mapper.WithdrawalMapper;
 import com.fcs.be.modules.financial.repository.WalletRepository;
 import com.fcs.be.modules.financial.repository.WithdrawalRequestRepository;
+import com.fcs.be.modules.financial.repository.WithdrawalSpecification;
 import com.fcs.be.modules.financial.repository.WithdrawalStatusHistoryRepository;
 import com.fcs.be.modules.financial.service.interfaces.WalletService;
 import com.fcs.be.modules.financial.service.interfaces.WithdrawalService;
@@ -18,8 +21,8 @@ import com.fcs.be.modules.iam.entity.User;
 import com.fcs.be.modules.iam.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,11 +53,11 @@ public class WithdrawalServiceImpl implements WithdrawalService {
     }
 
     @Override
-    public List<WithdrawalRequestResponse> getWithdrawals() {
-        return withdrawalRequestRepository.findByIsDeletedFalseOrderByCreatedAtDesc()
-            .stream()
-            .map(withdrawalMapper::toResponse)
-            .toList();
+    public PageResponse<WithdrawalRequestResponse> getWithdrawals(WithdrawalFilterRequest filter, Pageable pageable) {
+        return PageResponse.of(
+            withdrawalRequestRepository.findAll(WithdrawalSpecification.from(filter), pageable)
+                .map(withdrawalMapper::toResponse)
+        );
     }
 
     @Override

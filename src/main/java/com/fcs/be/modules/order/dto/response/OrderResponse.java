@@ -17,6 +17,8 @@ public record OrderResponse(
     UUID shippingAddressId,
     String shippingSnapshot,
     OrderStatus status,
+    String trackingNumber,
+    String shippingProvider,
     List<OrderItemResponse> items
 ) {
 }

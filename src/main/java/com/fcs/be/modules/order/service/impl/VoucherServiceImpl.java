@@ -2,6 +2,7 @@ package com.fcs.be.modules.order.service.impl;
 
 import com.fcs.be.common.enums.VoucherDiscountType;
 import com.fcs.be.common.enums.VoucherStatus;
+import com.fcs.be.common.response.PageResponse;
 import com.fcs.be.modules.iam.entity.User;
 import com.fcs.be.modules.iam.repository.UserRepository;
 import com.fcs.be.modules.order.dto.request.CreateVoucherRequest;
@@ -18,8 +19,8 @@ import jakarta.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,17 +69,26 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public List<VoucherResponse> getVouchers() {
-        return voucherRepository.findAll().stream()
-            .filter(v -> !v.isDeleted())
-            .map(voucherMapper::toResponse)
-            .toList();
+    public PageResponse<VoucherResponse> getVouchers(Pageable pageable) {
+        return PageResponse.of(
+            voucherRepository.findByIsDeletedFalseOrderByCreatedAtDesc(pageable)
+                .map(voucherMapper::toResponse)
+        );
     }
 
     @Override
     public VoucherResponse getVoucher(UUID id) {
         return voucherMapper.toResponse(voucherRepository.findByIdAndIsDeletedFalse(id)
             .orElseThrow(() -> new EntityNotFoundException("Voucher not found")));
+    }
+
+    @Override
+    @Transactional
+    public VoucherResponse updateStatus(UUID id, VoucherStatus status) {
+        Voucher voucher = voucherRepository.findByIdAndIsDeletedFalse(id)
+            .orElseThrow(() -> new EntityNotFoundException("Voucher not found"));
+        voucher.setStatus(status);
+        return voucherMapper.toResponse(voucherRepository.save(voucher));
     }
 
     @Override

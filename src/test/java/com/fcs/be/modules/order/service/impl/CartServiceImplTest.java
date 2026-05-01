@@ -1,7 +1,13 @@
 package com.fcs.be.modules.order.service.impl;
 
+import com.fcs.be.common.enums.ConsignmentItemStatus;
+import com.fcs.be.common.enums.ConsignmentRequestStatus;
 import com.fcs.be.common.enums.ProductStatus;
 import com.fcs.be.common.enums.UserStatus;
+import com.fcs.be.modules.consignment.entity.ConsignmentItem;
+import com.fcs.be.modules.consignment.entity.ConsignmentRequest;
+import com.fcs.be.modules.consignment.repository.ConsignmentItemRepository;
+import com.fcs.be.modules.consignment.repository.ConsignmentRequestRepository;
 import com.fcs.be.modules.iam.entity.User;
 import com.fcs.be.modules.iam.repository.UserRepository;
 import com.fcs.be.modules.order.dto.request.AddCartItemRequest;
@@ -16,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -24,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@Transactional
 class CartServiceImplTest {
 
     @Autowired
@@ -41,16 +49,17 @@ class CartServiceImplTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private ConsignmentRequestRepository consignmentRequestRepository;
+
+    @Autowired
+    private ConsignmentItemRepository consignmentItemRepository;
+
     private User testUser;
     private Product testProduct;
 
     @BeforeEach
     void setUp() {
-        cartItemRepository.deleteAll();
-        cartRepository.deleteAll();
-        productRepository.deleteAll();
-        userRepository.deleteAll();
-
         testUser = User.builder()
             .username("cartuser")
             .email("cart@example.com")
@@ -59,14 +68,36 @@ class CartServiceImplTest {
             .build();
         userRepository.save(testUser);
 
-        testProduct = Product.builder()
-            .sku("SKU001")
-            .name("Test Product")
-            .salePrice(new BigDecimal("100000"))
-            .originalPrice(new BigDecimal("150000"))
+        testProduct = createProduct("SKU001", "Test Product", new BigDecimal("100000"), "CONS-CART-001");
+    }
+
+    private Product createProduct(String sku, String name, BigDecimal price, String consignmentCode) {
+        ConsignmentRequest request = ConsignmentRequest.builder()
+            .consignor(testUser)
+            .code(consignmentCode)
+            .status(ConsignmentRequestStatus.APPROVED)
+            .build();
+        consignmentRequestRepository.save(request);
+
+        ConsignmentItem item = ConsignmentItem.builder()
+            .request(request)
+            .suggestedName(name)
+            .suggestedPrice(price)
+            .status(ConsignmentItemStatus.ACCEPTED)
+            .build();
+        consignmentItemRepository.save(item);
+
+        Product product = Product.builder()
+            .consignmentItem(item)
+            .sku(sku)
+            .name(name)
+            .salePrice(price)
+            .originalPrice(price)
+            .conditionPercent(new BigDecimal("90"))
             .status(ProductStatus.SELLING)
             .build();
-        productRepository.save(testProduct);
+        productRepository.save(product);
+        return product;
     }
 
     @Test
@@ -88,7 +119,7 @@ class CartServiceImplTest {
 
         assertNotNull(response);
         assertEquals(1, response.items().size());
-        assertEquals(new BigDecimal("100000"), response.estimatedTotal());
+        assertEquals(0, new BigDecimal("100000").compareTo(response.estimatedTotal()));
     }
 
     @Test
@@ -136,18 +167,12 @@ class CartServiceImplTest {
 
     @Test
     void testAddMultipleItemsToCart() {
-        Product product2 = Product.builder()
-            .sku("SKU002")
-            .name("Test Product 2")
-            .salePrice(new BigDecimal("50000"))
-            .status(ProductStatus.SELLING)
-            .build();
-        productRepository.save(product2);
+        Product product2 = createProduct("SKU002", "Test Product 2", new BigDecimal("50000"), "CONS-CART-002");
 
         cartService.addItem(testUser.getId(), new AddCartItemRequest(testProduct.getId()));
         CartResponse response = cartService.addItem(testUser.getId(), new AddCartItemRequest(product2.getId()));
 
         assertEquals(2, response.items().size());
-        assertEquals(new BigDecimal("150000"), response.estimatedTotal());
+        assertEquals(0, new BigDecimal("150000").compareTo(response.estimatedTotal()));
     }
 }

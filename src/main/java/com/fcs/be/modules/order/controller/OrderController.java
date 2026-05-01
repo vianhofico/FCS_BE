@@ -2,13 +2,17 @@ package com.fcs.be.modules.order.controller;
 
 import com.fcs.be.common.enums.OrderStatus;
 import com.fcs.be.common.response.ApiResponse;
+import com.fcs.be.common.response.PageResponse;
 import com.fcs.be.modules.order.dto.request.CreateOrderRequest;
+import com.fcs.be.modules.order.dto.request.OrderFilterRequest;
 import com.fcs.be.modules.order.dto.request.UpdateOrderStatusRequest;
 import com.fcs.be.modules.order.dto.response.OrderResponse;
 import com.fcs.be.modules.order.service.interfaces.OrderService;
 import jakarta.validation.Valid;
-import java.util.List;
+import java.time.Instant;
 import java.util.UUID;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,8 +35,16 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<OrderResponse>>> getOrders(@RequestParam(required = false) OrderStatus status) {
-        return ResponseEntity.ok(ApiResponse.ok("Fetched orders", orderService.getOrders(status)));
+    public ResponseEntity<ApiResponse<PageResponse<OrderResponse>>> getOrders(
+        @RequestParam(required = false) String orderCode,
+        @RequestParam(required = false) UUID buyerId,
+        @RequestParam(required = false) OrderStatus status,
+        @RequestParam(required = false) Instant startDate,
+        @RequestParam(required = false) Instant endDate,
+        @PageableDefault(size = 20) Pageable pageable
+    ) {
+        OrderFilterRequest filter = new OrderFilterRequest(orderCode, buyerId, status, startDate, endDate);
+        return ResponseEntity.ok(ApiResponse.ok("Fetched orders", orderService.getOrders(filter, pageable)));
     }
 
     @GetMapping("/{id}")
@@ -54,9 +66,19 @@ public class OrderController {
             orderService.updateStatus(id, request.status(), request.reason())));
     }
 
+    @PatchMapping("/{id}/tracking")
+    public ResponseEntity<ApiResponse<OrderResponse>> updateTracking(
+        @PathVariable UUID id,
+        @Valid @RequestBody com.fcs.be.modules.order.dto.request.UpdateOrderTrackingRequest request
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok("Order tracking updated",
+            orderService.updateTracking(id, request)));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteOrder(@PathVariable UUID id) {
         orderService.deleteOrder(id);
         return ResponseEntity.ok(ApiResponse.ok("Order deleted"));
     }
 }
+
