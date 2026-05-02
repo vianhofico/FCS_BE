@@ -48,17 +48,17 @@ TRUNCATE TABLE carts;
 -- 1. IAM - Permissions, Roles, Users
 -- -----------------------------------------------------
 INSERT INTO permissions (id, code, name, module, created_at, updated_at, is_deleted) VALUES
-('11111111-1111-1111-1111-000000000001', 'IAM_USER_VIEW', 'View Users', 'IAM', NOW(), NOW(), false),
-('11111111-1111-1111-1111-000000000002', 'IAM_USER_EDIT', 'Edit Users', 'IAM', NOW(), NOW(), false),
-('11111111-1111-1111-1111-000000000003', 'CATALOG_MANAGE', 'Manage Catalog', 'CATALOG', NOW(), NOW(), false),
-('11111111-1111-1111-1111-000000000004', 'ORDER_VIEW', 'View Orders', 'ORDER', NOW(), NOW(), false),
-('11111111-1111-1111-1111-000000000005', 'CONSIGNMENT_APPROVE', 'Approve Consignment', 'CONSIGNMENT', NOW(), NOW(), false);
+('11111111-1111-1111-1111-000000000001', 'IAM_USER_VIEW', 'Xem người dùng', 'IAM', NOW(), NOW(), false),
+('11111111-1111-1111-1111-000000000002', 'IAM_USER_EDIT', 'Chỉnh sửa người dùng', 'IAM', NOW(), NOW(), false),
+('11111111-1111-1111-1111-000000000003', 'CATALOG_MANAGE', 'Quản lý danh mục', 'CATALOG', NOW(), NOW(), false),
+('11111111-1111-1111-1111-000000000004', 'ORDER_VIEW', 'Xem đơn hàng', 'ORDER', NOW(), NOW(), false),
+('11111111-1111-1111-1111-000000000005', 'CONSIGNMENT_APPROVE', 'Phê duyệt ký gửi', 'CONSIGNMENT', NOW(), NOW(), false);
 
 INSERT INTO roles (id, name, description, created_at, updated_at, is_deleted) VALUES
-('11111111-1111-1111-1111-111111111111', 'ADMIN', 'Full system access', NOW(), NOW(), false),
-('22222222-2222-2222-2222-222222222222', 'STAFF', 'Shop operations', NOW(), NOW(), false),
-('33333333-3333-3333-3333-333333333333', 'CONSIGNOR', 'Sell items', NOW(), NOW(), false),
-('44444444-4444-4444-4444-444444444444', 'BUYER', 'Buy items', NOW(), NOW(), false);
+('11111111-1111-1111-1111-111111111111', 'ADMIN', 'Quyền truy cập toàn hệ thống', NOW(), NOW(), false),
+('22222222-2222-2222-2222-222222222222', 'STAFF', 'Vận hành cửa hàng', NOW(), NOW(), false),
+('33333333-3333-3333-3333-333333333333', 'CONSIGNOR', 'Người bán hàng ký gửi', NOW(), NOW(), false),
+('44444444-4444-4444-4444-444444444444', 'BUYER', 'Người mua hàng', NOW(), NOW(), false);
 
 -- Assign Permissions to Roles
 INSERT INTO role_permissions (id, role_id, permission_id, created_at, updated_at, is_deleted) VALUES
@@ -89,41 +89,41 @@ INSERT INTO user_addresses (id, user_id, full_name, phone, street, ward, distric
 -- 2. Catalog - Settings, Brands, Categories
 -- -----------------------------------------------------
 INSERT INTO system_settings (id, setting_key, setting_value, description, created_at, updated_at, is_deleted) VALUES
-(UUID(), 'COMMISSION_RATE', '0.10', 'Default commission for shop (10%)', NOW(), NOW(), false),
-(UUID(), 'SHIPPING_FEE_FLAT', '30000', 'Flat shipping fee', NOW(), NOW(), false);
+(UUID(), 'COMMISSION_RATE', '0.10', 'Tỷ lệ hoa hồng mặc định của cửa hàng (10%)', NOW(), NOW(), false),
+(UUID(), 'SHIPPING_FEE_FLAT', '30000', 'Phí vận chuyển đồng giá', NOW(), NOW(), false);
 
 INSERT INTO brands (id, name, logo_url, description, is_active, created_at, updated_at, is_deleted) VALUES
-('baaaaaaa-1111-1111-1111-111111111111', 'Gucci', 'https://fcs-assets.com/gucci.png', 'Iconic luxury brand', true, NOW(), NOW(), false),
-('baaaaaaa-2222-2222-2222-222222222222', 'Louis Vuitton', 'https://fcs-assets.com/lv.png', 'Classic luxury brand', true, NOW(), NOW(), false),
-('baaaaaaa-3333-3333-3333-333333333333', 'Dior', 'https://fcs-assets.com/dior.png', 'Elegant fashion brand', true, NOW(), NOW(), false);
+('baaaaaaa-1111-1111-1111-111111111111', 'Gucci', 'https://fcs-assets.com/gucci.png', 'Thương hiệu thời trang xa xỉ biểu tượng', true, NOW(), NOW(), false),
+('baaaaaaa-2222-2222-2222-222222222222', 'Louis Vuitton', 'https://fcs-assets.com/lv.png', 'Thương hiệu thời trang cao cấp cổ điển', true, NOW(), NOW(), false),
+('baaaaaaa-3333-3333-3333-333333333333', 'Dior', 'https://fcs-assets.com/dior.png', 'Thương hiệu thời trang thanh lịch', true, NOW(), NOW(), false);
 
 INSERT INTO categories (id, parent_id, name, slug, is_active, created_at, updated_at, is_deleted) VALUES
-('c1000000-0000-0000-0000-000000000000', NULL, 'Women', 'women', true, NOW(), NOW(), false),
-('c1000001-0001-0000-0000-000000000000', 'c1000000-0000-0000-0000-000000000000', 'Handbags', 'women-handbags', true, NOW(), NOW(), false),
-('c1000002-0002-0000-0000-000000000000', 'c1000000-0000-0000-0000-000000000000', 'Shoes', 'women-shoes', true, NOW(), NOW(), false),
-('c2000000-0000-0000-0000-000000000000', NULL, 'Men', 'men', true, NOW(), NOW(), false);
+('c1000000-0000-0000-0000-000000000000', NULL, 'Nữ', 'women', true, NOW(), NOW(), false),
+('c1000001-0001-0000-0000-000000000000', 'c1000000-0000-0000-0000-000000000000', 'Túi xách', 'women-handbags', true, NOW(), NOW(), false),
+('c1000002-0002-0000-0000-000000000000', 'c1000000-0000-0000-0000-000000000000', 'Giày', 'women-shoes', true, NOW(), NOW(), false),
+('c2000000-0000-0000-0000-000000000000', NULL, 'Nam', 'men', true, NOW(), NOW(), false);
 
 -- -----------------------------------------------------
 -- 3. Consignment - Requests, Items, Contracts
 -- -----------------------------------------------------
 INSERT INTO consignment_requests (id, consignor_id, code, status, note, created_at, updated_at, is_deleted) VALUES
-('c0000001-0001-0001-0001-000000000001', 'cccccccc-cccc-cccc-cccc-cccccccccccc', 'CR-2024-001', 'APPROVED', 'Sending 1 luxury bag', NOW(), NOW(), false),
-('c0000002-0002-0002-0002-000000000002', 'cccccccc-cccc-cccc-cccc-cccccccccccc', 'CR-2024-002', 'PENDING', 'Check my Dior wallet', NOW(), NOW(), false);
+('c0000001-0001-0001-0001-000000000001', 'cccccccc-cccc-cccc-cccc-cccccccccccc', 'CR-2024-001', 'APPROVED', 'Gửi 1 túi xách hàng hiệu', NOW(), NOW(), false),
+('c0000002-0002-0002-0002-000000000002', 'cccccccc-cccc-cccc-cccc-cccccccccccc', 'CR-2024-002', 'SUBMITTED', 'Kiểm tra ví Dior của tôi', NOW(), NOW(), false);
 
 INSERT INTO consignment_items (id, request_id, suggested_name, suggested_price, condition_note, status, created_at, updated_at, is_deleted) VALUES
-('caaaaaaa-1111-1111-1111-000000000001', 'c0000001-0001-0001-0001-000000000001', 'Gucci Marmont Small Shoulder Bag', 25000000.0000, 'Like new, full box', 'READY_FOR_SALE', NOW(), NOW(), false);
+('caaaaaaa-1111-1111-1111-000000000001', 'c0000001-0001-0001-0001-000000000001', 'Túi đeo vai Gucci Marmont Small', 25000000.0000, 'Như mới, đầy đủ hộp', 'CONVERTED_TO_PRODUCT', NOW(), NOW(), false);
 
 INSERT INTO consignment_contracts (id, request_id, commission_rate, agreed_price, status, signed_at, valid_until, created_at, updated_at, is_deleted) VALUES
 (UUID(), 'c0000001-0001-0001-0001-000000000001', 0.1000, 25000000.0000, 'ACTIVE', NOW(), DATE_ADD(NOW(), INTERVAL 6 MONTH), NOW(), NOW(), false);
 
 INSERT INTO consignment_status_history (id, entity_type, entity_id, from_status, to_status, changed_by, reason, created_at, updated_at) VALUES
-(UUID(), 'CONSIGNMENT_REQUEST', 'c0000001-0001-0001-0001-000000000001', 'PENDING', 'APPROVED', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Item authentic and good condition', NOW(), NOW());
+(UUID(), 'CONSIGNMENT_REQUEST', 'c0000001-0001-0001-0001-000000000001', 'PENDING', 'APPROVED', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Sản phẩm chính hãng và tình trạng tốt', NOW(), NOW());
 
 -- -----------------------------------------------------
 -- 4. Product - Products, Media, Warehouse
 -- -----------------------------------------------------
 INSERT INTO products (id, consignment_item_id, brand_id, sku, name, description, condition_percent, original_price, sale_price, status, created_at, updated_at, is_deleted) VALUES
-('00000001-0001-0001-0001-000000000001', 'caaaaaaa-1111-1111-1111-000000000001', 'baaaaaaa-1111-1111-1111-111111111111', 'SKU-GUC-MAR-001', 'Gucci Marmont Shoulder Bag', 'Leather shoulder bag with GG logo', 98.00, 45000000.0000, 25000000.0000, 'AVAILABLE', NOW(), NOW(), false);
+('00000001-0001-0001-0001-000000000001', 'caaaaaaa-1111-1111-1111-000000000001', 'baaaaaaa-1111-1111-1111-111111111111', 'SKU-GUC-MAR-001', 'Túi đeo vai Gucci Marmont', 'Túi đeo vai bằng da với logo GG', 98.00, 45000000.0000, 25000000.0000, 'SELLING', NOW(), NOW(), false);
 
 INSERT INTO product_categories (id, product_id, category_id, is_primary, created_at, updated_at, is_deleted) VALUES
 (UUID(), '00000001-0001-0001-0001-000000000001', 'c1000001-0001-0000-0000-000000000000', true, NOW(), NOW(), false);
@@ -132,10 +132,10 @@ INSERT INTO media_assets (id, owner_type, owner_id, media_type, url, display_ord
 (UUID(), 'PRODUCT', '00000001-0001-0001-0001-000000000001', 'IMAGE', 'https://fcs-assets.com/products/gucci-1.jpg', 1, true, NOW(), NOW(), false);
 
 INSERT INTO warehouse_logs (id, product_id, location, action_type, note, created_at, updated_at) VALUES
-(UUID(), '00000001-0001-0001-0001-000000000001', 'Shelf-A1', 'INBOUND', 'Received from consignor', NOW(), NOW());
+(UUID(), '00000001-0001-0001-0001-000000000001', 'Kệ-A1', 'INBOUND', 'Nhận hàng từ người ký gửi', NOW(), NOW());
 
 INSERT INTO product_status_history (id, product_id, from_status, to_status, changed_by, reason, created_at, updated_at) VALUES
-(UUID(), '00000001-0001-0001-0001-000000000001', NULL, 'AVAILABLE', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Ready for sale', NOW(), NOW());
+(UUID(), '00000001-0001-0001-0001-000000000001', NULL, 'SELLING', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Sẵn sàng để bán', NOW(), NOW());
 
 -- -----------------------------------------------------
 -- 5. Orders - Vouchers, Orders, Carts, Wishlist
@@ -147,10 +147,10 @@ INSERT INTO orders (id, buyer_id, order_code, sub_total, shipping_fee, discount_
 ('00000001-0001-0001-0001-000000000001', 'dddddddd-dddd-dddd-dddd-dddddddddddd', 'FCS-ORD-001', 25000000.0000, 30000.0000, 500000.0000, 24530000.0000, 'CREDIT_CARD', 'ad000002-0002-0002-0002-000000000002', 'DELIVERED', NOW(), NOW(), false);
 
 INSERT INTO order_items (id, order_id, product_id, sku_snapshot, product_name_snapshot, price_at_purchase, created_at, updated_at, is_deleted) VALUES
-(UUID(), '00000001-0001-0001-0001-000000000001', '00000001-0001-0001-0001-000000000001', 'SKU-GUC-MAR-001', 'Gucci Marmont Shoulder Bag', 25000000.0000, NOW(), NOW(), false);
+(UUID(), '00000001-0001-0001-0001-000000000001', '00000001-0001-0001-0001-000000000001', 'SKU-GUC-MAR-001', 'Túi đeo vai Gucci Marmont', 25000000.0000, NOW(), NOW(), false);
 
 INSERT INTO order_status_history (id, order_id, from_status, to_status, changed_by, reason, created_at, updated_at) VALUES
-(UUID(), '00000001-0001-0001-0001-000000000001', 'PENDING', 'DELIVERED', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'System updated', NOW(), NOW());
+(UUID(), '00000001-0001-0001-0001-000000000001', 'PENDING_PAYMENT', 'DELIVERED', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Cập nhật hệ thống', NOW(), NOW());
 
 INSERT INTO voucher_usages (id, voucher_id, user_id, order_id, created_at, updated_at, is_deleted) VALUES
 (UUID(), 'baaaaaaa-ffff-1111-1111-111111111111', 'dddddddd-dddd-dddd-dddd-dddddddddddd', '00000001-0001-0001-0001-000000000001', NOW(), NOW(), false);
@@ -165,7 +165,7 @@ INSERT INTO wishlist_items (id, user_id, product_id, created_at, updated_at) VAL
 -- 6. Returns & Reviews
 -- -----------------------------------------------------
 INSERT INTO product_reviews (id, product_id, buyer_id, rating, comment, verified_purchase, created_at, updated_at, is_deleted) VALUES
-(UUID(), '00000001-0001-0001-0001-000000000001', 'dddddddd-dddd-dddd-dddd-dddddddddddd', 5, 'Perfect quality!', true, NOW(), NOW(), false);
+(UUID(), '00000001-0001-0001-0001-000000000001', 'dddddddd-dddd-dddd-dddd-dddddddddddd', 5, 'Chất lượng tuyệt vời!', true, NOW(), NOW(), false);
 
 -- -----------------------------------------------------
 -- 7. Financial - Wallets, Transactions, Withdrawals
@@ -175,28 +175,28 @@ INSERT INTO wallets (id, user_id, balance, available_balance, bank_name, bank_ac
 ('baaaaaaa-cccc-2222-2222-222222222222', 'cccccccc-cccc-cccc-cccc-cccccccccccc', 22500000.00, 22500000.00, 'Vietcombank', 'JANE CONSIGNOR', '1234567890', NOW(), NOW(), false);
 
 INSERT INTO wallet_transactions (id, wallet_id, order_id, amount, type, status, reference_type, description, created_at, updated_at) VALUES
-(UUID(), 'baaaaaaa-cccc-2222-2222-222222222222', '00000001-0001-0001-0001-000000000001', 22500000.00, 'PAYOUT', 'COMPLETED', 'ORDER', 'Payout for Gucci Bag (Order FCS-ORD-001)', NOW(), NOW());
+(UUID(), 'baaaaaaa-cccc-2222-2222-222222222222', '00000001-0001-0001-0001-000000000001', 22500000.00, 'PAYOUT', 'POSTED', 'ORDER', 'Thanh toán cho Túi Gucci (Đơn hàng FCS-ORD-001)', NOW(), NOW());
 
 INSERT INTO withdrawal_requests (id, request_code, wallet_id, amount, status, reviewed_by, reviewed_at, created_at, updated_at, is_deleted) VALUES
 ('00000001-ffff-0001-0001-000000000001', 'WDR-001', 'baaaaaaa-cccc-2222-2222-222222222222', 10000000.00, 'APPROVED', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', NOW(), NOW(), NOW(), false);
 
 INSERT INTO withdrawal_status_history (id, withdrawal_request_id, from_status, to_status, changed_by, reason, created_at, updated_at) VALUES
-(UUID(), '00000001-ffff-0001-0001-000000000001', 'PENDING', 'APPROVED', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Approved after review', NOW(), NOW());
+(UUID(), '00000001-ffff-0001-0001-000000000001', 'PENDING', 'APPROVED', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Phê duyệt sau khi kiểm tra', NOW(), NOW());
 
 -- -----------------------------------------------------
 -- 8. Communications - Notifications & Chat
 -- -----------------------------------------------------
 INSERT INTO notifications (id, title, content, type, created_by, created_at, updated_at, is_deleted) VALUES
-('baaaaaaa-eeee-1111-1111-111111111111', 'Welcome to FCS', 'Thanks for joining our fashion consignment system!', 'SYSTEM', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', NOW(), NOW(), false);
+('baaaaaaa-eeee-1111-1111-111111111111', 'Chào mừng đến với FCS', 'Cảm ơn bạn đã tham gia hệ thống ký gửi thời trang của chúng tôi!', 'SYSTEM', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', NOW(), NOW(), false);
 
 INSERT INTO user_notifications (id, user_id, notification_id, is_read, created_at, updated_at, is_deleted) VALUES
 (UUID(), 'dddddddd-dddd-dddd-dddd-dddddddddddd', 'baaaaaaa-eeee-1111-1111-111111111111', false, NOW(), NOW(), false);
 
 INSERT INTO conversations (id, participant1_id, participant2_id, last_message_at, last_message_preview, created_at, updated_at, is_deleted) VALUES
-('ca000000-3333-3333-3333-000000000001', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'cccccccc-cccc-cccc-cccc-cccccccccccc', NOW(), 'Hello, is your bag still available?', NOW(), NOW(), false);
+('ca000000-3333-3333-3333-000000000001', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'cccccccc-cccc-cccc-cccc-cccccccccccc', NOW(), 'Xin chào, túi của bạn còn hàng không?', NOW(), NOW(), false);
 
 INSERT INTO chat_messages (id, conversation_id, sender_id, content, created_at, updated_at) VALUES
-(UUID(), 'ca000000-3333-3333-3333-000000000001', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Hello, is your bag still available?', NOW(), NOW());
+(UUID(), 'ca000000-3333-3333-3333-000000000001', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Xin chào, túi của bạn còn hàng không?', NOW(), NOW());
 
 -- -----------------------------------------------------
 -- 9. Audit - Activity Logs
