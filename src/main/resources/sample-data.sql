@@ -132,7 +132,7 @@ INSERT INTO media_assets (id, owner_type, owner_id, media_type, url, display_ord
 (UUID(), 'PRODUCT', '00000001-0001-0001-0001-000000000001', 'IMAGE', 'https://fcs-assets.com/products/gucci-1.jpg', 1, true, NOW(), NOW(), false);
 
 INSERT INTO warehouse_logs (id, product_id, location, action_type, note, created_at, updated_at) VALUES
-(UUID(), '00000001-0001-0001-0001-000000000001', 'Kệ-A1', 'INBOUND', 'Nhận hàng từ người ký gửi', NOW(), NOW());
+(UUID(), '00000001-0001-0001-0001-000000000001', 'Kệ-A1', 'IN', 'Nhận hàng từ người ký gửi', NOW(), NOW());
 
 INSERT INTO product_status_history (id, product_id, from_status, to_status, changed_by, reason, created_at, updated_at) VALUES
 (UUID(), '00000001-0001-0001-0001-000000000001', NULL, 'SELLING', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Sẵn sàng để bán', NOW(), NOW());
