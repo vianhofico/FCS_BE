@@ -11,6 +11,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,7 +40,7 @@ public class ActivityLog extends ImmutableLogEntity {
     @Column(name = "entity_name", nullable = false, length = 120)
     private String entityName;
 
-    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.CHAR)
+    @JdbcTypeCode(SqlTypes.CHAR)
     @Column(name = "entity_id", length = 36)
     private UUID entityId;
 

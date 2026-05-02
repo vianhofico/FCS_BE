@@ -12,6 +12,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,7 +34,8 @@ public class MediaAsset extends SoftDeleteEntity {
     @Column(name = "owner_type", nullable = false, length = 30)
     private MediaOwnerType ownerType;
 
-    @Column(name = "owner_id", nullable = false)
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "owner_id", nullable = false, length = 36)
     private UUID ownerId;
 
     @Enumerated(EnumType.STRING)

@@ -8,6 +8,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +29,7 @@ public class ConsignmentStatusHistory extends ImmutableLogEntity {
     @Column(name = "entity_type", nullable = false, length = 30)
     private String entityType;
 
-    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.CHAR)
+    @JdbcTypeCode(SqlTypes.CHAR)
     @Column(name = "entity_id", nullable = false, length = 36)
     private UUID entityId;
 
