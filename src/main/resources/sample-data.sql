@@ -114,7 +114,7 @@ INSERT INTO consignment_items (id, request_id, suggested_name, suggested_price, 
 ('caaaaaaa-1111-1111-1111-000000000001', 'c0000001-0001-0001-0001-000000000001', 'Túi đeo vai Gucci Marmont Small', 25000000.0000, 'Như mới, đầy đủ hộp', 'CONVERTED_TO_PRODUCT', NOW(), NOW(), false);
 
 INSERT INTO consignment_contracts (id, request_id, commission_rate, agreed_price, status, signed_at, valid_until, created_at, updated_at, is_deleted) VALUES
-(UUID(), 'c0000001-0001-0001-0001-000000000001', 0.1000, 25000000.0000, 'ACTIVE', NOW(), DATE_ADD(NOW(), INTERVAL 6 MONTH), NOW(), NOW(), false);
+(UUID(), 'c0000001-0001-0001-0001-000000000001', 0.1000, 25000000.0000, 'SIGNED', NOW(), DATE_ADD(NOW(), INTERVAL 6 MONTH), NOW(), NOW(), false);
 
 INSERT INTO consignment_status_history (id, entity_type, entity_id, from_status, to_status, changed_by, reason, created_at, updated_at) VALUES
 (UUID(), 'CONSIGNMENT_REQUEST', 'c0000001-0001-0001-0001-000000000001', 'PENDING', 'APPROVED', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Sản phẩm chính hãng và tình trạng tốt', NOW(), NOW());
