@@ -1,5 +1,6 @@
 package com.fcs.be.modules.iam.dto.response;
 
+import java.util.List;
 import java.util.UUID;
 
 public record AuthResponse(
@@ -7,5 +8,6 @@ public record AuthResponse(
     String refreshToken,
     UUID userId,
     String username,
-    String email
+    String email,
+    List<String> roles
 ) {}

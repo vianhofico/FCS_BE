@@ -56,8 +56,8 @@ INSERT INTO permissions (id, code, name, module, created_at, updated_at, is_dele
 
 INSERT INTO roles (id, name, description, created_at, updated_at, is_deleted) VALUES
 ('11111111-1111-1111-1111-111111111111', 'ADMIN', 'Quyền truy cập toàn hệ thống', NOW(), NOW(), false),
-('22222222-2222-2222-2222-222222222222', 'STAFF', 'Vận hành cửa hàng', NOW(), NOW(), false),
-('33333333-3333-3333-3333-333333333333', 'CONSIGNOR', 'Người bán hàng ký gửi', NOW(), NOW(), false),
+('22222222-2222-2222-2222-222222222222', 'MANAGER', 'Vận hành cửa hàng', NOW(), NOW(), false),
+('33333333-3333-3333-3333-333333333333', 'SELLER', 'Người bán hàng ký gửi', NOW(), NOW(), false),
 ('44444444-4444-4444-4444-444444444444', 'BUYER', 'Người mua hàng', NOW(), NOW(), false);
 
 -- Assign Permissions to Roles
@@ -80,6 +80,13 @@ INSERT INTO user_roles (id, user_id, role_id, created_at, updated_at, is_deleted
 (UUID(), 'cccccccc-cccc-cccc-cccc-cccccccccccc', '33333333-3333-3333-3333-333333333333', NOW(), NOW(), false),
 (UUID(), 'dddddddd-dddd-dddd-dddd-dddddddddddd', '44444444-4444-4444-4444-444444444444', NOW(), NOW(), false),
 (UUID(), 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '44444444-4444-4444-4444-444444444444', NOW(), NOW(), false);
+
+INSERT INTO auth_identities (id, user_id, provider, provider_email, provider_user_id, password_hash, email_verified, is_primary, created_at, updated_at) VALUES
+(UUID(), 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'LOCAL', 'admin@fcs.com', 'admin@fcs.com', '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', true, true, NOW(), NOW()),
+(UUID(), 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'LOCAL', 'ken@fcs.com', 'ken@fcs.com', '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', true, true, NOW(), NOW()),
+(UUID(), 'cccccccc-cccc-cccc-cccc-cccccccccccc', 'LOCAL', 'jane@gmail.com', 'jane@gmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', true, true, NOW(), NOW()),
+(UUID(), 'dddddddd-dddd-dddd-dddd-dddddddddddd', 'LOCAL', 'bob@gmail.com', 'bob@gmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', true, true, NOW(), NOW()),
+(UUID(), 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 'LOCAL', 'alice@gmail.com', 'alice@gmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', true, true, NOW(), NOW());
 
 INSERT INTO user_addresses (id, user_id, full_name, phone, street, ward, district, city, is_default, type, created_at, updated_at, is_deleted) VALUES
 ('ad000001-0001-0001-0001-000000000001', 'cccccccc-cccc-cccc-cccc-cccccccccccc', 'Jane Consignor', '0901000003', '123 Fashion Way', 'Ward 10', 'District 1', 'HCM City', true, 'HOME', NOW(), NOW(), false),
@@ -175,7 +182,7 @@ INSERT INTO wallets (id, user_id, balance, available_balance, bank_name, bank_ac
 ('baaaaaaa-cccc-2222-2222-222222222222', 'cccccccc-cccc-cccc-cccc-cccccccccccc', 22500000.00, 22500000.00, 'Vietcombank', 'JANE CONSIGNOR', '1234567890', NOW(), NOW(), false);
 
 INSERT INTO wallet_transactions (id, wallet_id, order_id, amount, type, status, reference_type, description, created_at, updated_at) VALUES
-(UUID(), 'baaaaaaa-cccc-2222-2222-222222222222', '00000001-0001-0001-0001-000000000001', 22500000.00, 'PAYOUT', 'POSTED', 'ORDER', 'Thanh toán cho Túi Gucci (Đơn hàng FCS-ORD-001)', NOW(), NOW());
+(UUID(), 'baaaaaaa-cccc-2222-2222-222222222222', '00000001-0001-0001-0001-000000000001', 22500000.00, 'SALE_REVENUE', 'POSTED', 'ORDER', 'Thanh toán cho Túi Gucci (Đơn hàng FCS-ORD-001)', NOW(), NOW());
 
 INSERT INTO withdrawal_requests (id, request_code, wallet_id, amount, status, reviewed_by, reviewed_at, created_at, updated_at, is_deleted) VALUES
 ('00000001-ffff-0001-0001-000000000001', 'WDR-001', 'baaaaaaa-cccc-2222-2222-222222222222', 10000000.00, 'APPROVED', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', NOW(), NOW(), NOW(), false);

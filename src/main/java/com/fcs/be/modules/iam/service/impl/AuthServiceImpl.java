@@ -13,8 +13,6 @@ import com.fcs.be.modules.iam.dto.request.ResetPasswordRequest;
 import com.fcs.be.modules.iam.dto.response.AuthResponse;
 import com.fcs.be.modules.iam.entity.AuthIdentity;
 import com.fcs.be.modules.iam.entity.RefreshToken;
-import com.fcs.be.modules.iam.entity.UserRole;
-import com.fcs.be.modules.iam.mapper.AuthMapper;
 import com.fcs.be.modules.iam.repository.UserRoleRepository;
 import com.fcs.be.modules.iam.entity.User;
 import com.fcs.be.modules.iam.repository.AuthIdentityRepository;
@@ -51,7 +49,6 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenService jwtTokenService;
     private final PasswordEncoder passwordEncoder;
     private final UserRoleRepository userRoleRepository;
-    private final AuthMapper authMapper;
     private final StringRedisTemplate redisTemplate;
     private final EmailService emailService;
 
@@ -63,7 +60,6 @@ public class AuthServiceImpl implements AuthService {
         JwtTokenService jwtTokenService,
         PasswordEncoder passwordEncoder,
         UserRoleRepository userRoleRepository,
-        AuthMapper authMapper,
         StringRedisTemplate redisTemplate,
         EmailService emailService
     ) {
@@ -74,7 +70,6 @@ public class AuthServiceImpl implements AuthService {
         this.jwtTokenService = jwtTokenService;
         this.passwordEncoder = passwordEncoder;
         this.userRoleRepository = userRoleRepository;
-        this.authMapper = authMapper;
         this.redisTemplate = redisTemplate;
         this.emailService = emailService;
     }
@@ -198,7 +193,7 @@ public class AuthServiceImpl implements AuthService {
             .build();
         refreshTokenRepository.save(token);
 
-        return authMapper.toResponse(accessToken, rawRefreshToken, user);
+        return new AuthResponse(accessToken, rawRefreshToken, user.getId(), user.getUsername(), user.getEmail(), roles);
     }
 
     private String hashToken(String token) {

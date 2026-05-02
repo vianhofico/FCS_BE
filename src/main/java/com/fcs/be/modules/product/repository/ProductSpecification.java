@@ -31,7 +31,7 @@ public class ProductSpecification {
                 predicates.add(cb.equal(root.get("brand").get("id"), filter.brandId()));
             }
 
-            if (filter.categoryId() != null) {
+            if (filter.categoryId() != null && !filter.categoryId().toString().isBlank()) {
                 var categoryJoin = root.join("productCategories");
                 predicates.add(cb.equal(categoryJoin.get("category").get("id"), filter.categoryId()));
             }
