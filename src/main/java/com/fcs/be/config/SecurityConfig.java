@@ -38,6 +38,18 @@ public class SecurityConfig {
                     "/ws/**",
                     "/api/v1/payments/webhook"
                 ).permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET,
+                    "/api/v1/products",
+                    "/api/v1/products/*",
+                    "/api/v1/products/*/categories",
+                    "/api/v1/products/*/reviews",
+                    "/api/v1/products/*/reviews/summary",
+                    "/api/v1/catalog/categories",
+                    "/api/v1/catalog/categories/*",
+                    "/api/v1/catalog/brands",
+                    "/api/v1/catalog/brands/*",
+                    "/api/v1/media"
+                ).permitAll()
                 .requestMatchers("/api/v1/iam/roles/**", "/api/v1/iam/permissions/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
