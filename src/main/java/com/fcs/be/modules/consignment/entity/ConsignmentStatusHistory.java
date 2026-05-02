@@ -27,7 +27,8 @@ public class ConsignmentStatusHistory extends ImmutableLogEntity {
     @Column(name = "entity_type", nullable = false, length = 30)
     private String entityType;
 
-    @Column(name = "entity_id", nullable = false)
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.CHAR)
+    @Column(name = "entity_id", nullable = false, length = 36)
     private UUID entityId;
 
     @Column(name = "from_status", length = 40)

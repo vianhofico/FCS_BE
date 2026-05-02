@@ -38,7 +38,8 @@ public class ActivityLog extends ImmutableLogEntity {
     @Column(name = "entity_name", nullable = false, length = 120)
     private String entityName;
 
-    @Column(name = "entity_id")
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.CHAR)
+    @Column(name = "entity_id", length = 36)
     private UUID entityId;
 
     @Column(name = "old_values", length = 4000)
