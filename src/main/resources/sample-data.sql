@@ -140,8 +140,8 @@ INSERT INTO product_status_history (id, product_id, from_status, to_status, chan
 -- -----------------------------------------------------
 -- 5. Orders - Vouchers, Orders, Carts, Wishlist
 -- -----------------------------------------------------
-INSERT INTO vouchers (id, code, discount_type, discount_value, min_order_value, max_discount, start_date, end_date, usage_limit, status, created_at, updated_at, is_deleted) VALUES
-('baaaaaaa-ffff-1111-1111-111111111111', 'WELCOME10', 'PERCENTAGE', 10.0000, 1000000.0000, 500000.0000, NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR), 100, 'ACTIVE', NOW(), NOW(), false);
+INSERT INTO vouchers (id, code, discount_type, discount_value, min_order_value, max_discount, start_date, end_date, usage_limit, used_count, status, created_at, updated_at, is_deleted) VALUES
+('baaaaaaa-ffff-1111-1111-111111111111', 'WELCOME10', 'PERCENT', 10.0000, 1000000.0000, 500000.0000, NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR), 100, 0, 'ACTIVE', NOW(), NOW(), false);
 
 INSERT INTO orders (id, buyer_id, order_code, sub_total, shipping_fee, discount_amount, total_amount, payment_method, shipping_address_id, status, created_at, updated_at, is_deleted) VALUES
 ('00000001-0001-0001-0001-000000000001', 'dddddddd-dddd-dddd-dddd-dddddddddddd', 'FCS-ORD-001', 25000000.0000, 30000.0000, 500000.0000, 24530000.0000, 'CREDIT_CARD', 'ad000002-0002-0002-0002-000000000002', 'DELIVERED', NOW(), NOW(), false);
