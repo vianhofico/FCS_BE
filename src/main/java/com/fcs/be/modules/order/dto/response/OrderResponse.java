@@ -2,6 +2,7 @@ package com.fcs.be.modules.order.dto.response;
 
 import com.fcs.be.common.enums.OrderStatus;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +20,7 @@ public record OrderResponse(
     OrderStatus status,
     String trackingNumber,
     String shippingProvider,
-    List<OrderItemResponse> items
+    List<OrderItemResponse> items,
+    Instant createdAt
 ) {
 }

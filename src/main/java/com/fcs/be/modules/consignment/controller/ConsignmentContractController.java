@@ -1,12 +1,15 @@
 package com.fcs.be.modules.consignment.controller;
 
 import com.fcs.be.common.response.ApiResponse;
+import com.fcs.be.common.response.PageResponse;
 import com.fcs.be.modules.consignment.dto.request.CreateConsignmentContractRequest;
 import com.fcs.be.modules.consignment.dto.request.UpdateConsignmentContractStatusRequest;
 import com.fcs.be.modules.consignment.dto.response.ConsignmentContractResponse;
 import com.fcs.be.modules.consignment.service.interfaces.ConsignmentContractService;
 import jakarta.validation.Valid;
 import java.util.UUID;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,6 +35,14 @@ public class ConsignmentContractController {
         @Valid @RequestBody CreateConsignmentContractRequest request
     ) {
         return ResponseEntity.ok(ApiResponse.ok("Contract created", contractService.createContract(request)));
+    }
+
+    @GetMapping("/contracts")
+    public ResponseEntity<ApiResponse<PageResponse<ConsignmentContractResponse>>> getContracts(
+        @RequestParam(required = false) UUID consignorId,
+        @PageableDefault(size = 20) Pageable pageable
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok("Fetched contracts", contractService.getContracts(consignorId, pageable)));
     }
 
     @GetMapping("/{requestId}/contract")

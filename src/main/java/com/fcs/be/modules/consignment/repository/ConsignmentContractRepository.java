@@ -3,9 +3,15 @@ package com.fcs.be.modules.consignment.repository;
 import com.fcs.be.modules.consignment.entity.ConsignmentContract;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ConsignmentContractRepository extends JpaRepository<ConsignmentContract, UUID> {
+
+    Page<ConsignmentContract> findByIsDeletedFalse(Pageable pageable);
+
+    Page<ConsignmentContract> findByRequestConsignorIdAndIsDeletedFalse(UUID consignorId, Pageable pageable);
 
     Optional<ConsignmentContract> findByIdAndIsDeletedFalse(UUID id);
 

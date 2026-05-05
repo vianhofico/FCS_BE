@@ -23,7 +23,7 @@ class ProductServiceImplTest {
 
     @Test
     void testGetProducts_WithNoFilters_ReturnsPage() {
-        ProductFilterRequest filter = new ProductFilterRequest(null, null, null, null, null, null, null, null);
+        ProductFilterRequest filter = new ProductFilterRequest(null, null, null, null, null, null, null, null, null);
         PageResponse<ProductResponse> page = productService.getProducts(filter, PageRequest.of(0, 20));
 
         assertNotNull(page);

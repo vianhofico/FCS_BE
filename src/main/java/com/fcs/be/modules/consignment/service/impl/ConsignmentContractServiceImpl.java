@@ -2,6 +2,7 @@ package com.fcs.be.modules.consignment.service.impl;
 
 import com.fcs.be.common.enums.ConsignmentContractStatus;
 import com.fcs.be.common.enums.ConsignmentRequestStatus;
+import com.fcs.be.common.response.PageResponse;
 import com.fcs.be.modules.consignment.dto.request.CreateConsignmentContractRequest;
 import com.fcs.be.modules.consignment.dto.request.UpdateConsignmentContractStatusRequest;
 import com.fcs.be.modules.consignment.dto.response.ConsignmentContractResponse;
@@ -14,6 +15,8 @@ import com.fcs.be.modules.consignment.service.interfaces.ConsignmentContractServ
 import jakarta.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +60,15 @@ public class ConsignmentContractServiceImpl implements ConsignmentContractServic
         contract.setStatus(ConsignmentContractStatus.DRAFT);
 
         return consignmentContractMapper.toResponse(contractRepository.save(contract));
+    }
+
+    @Override
+    public PageResponse<ConsignmentContractResponse> getContracts(UUID consignorId, Pageable pageable) {
+        Page<ConsignmentContractResponse> contracts = (consignorId == null
+            ? contractRepository.findByIsDeletedFalse(pageable)
+            : contractRepository.findByRequestConsignorIdAndIsDeletedFalse(consignorId, pageable))
+            .map(consignmentContractMapper::toResponse);
+        return PageResponse.of(contracts);
     }
 
     @Override

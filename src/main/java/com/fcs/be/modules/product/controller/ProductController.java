@@ -11,6 +11,7 @@ import com.fcs.be.modules.product.dto.response.ProductResponse;
 import com.fcs.be.modules.product.service.interfaces.ProductService;
 import jakarta.validation.Valid;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -41,6 +42,7 @@ public class ProductController {
         @RequestParam(required = false) String keyword,
         @RequestParam(required = false) UUID brandId,
         @RequestParam(required = false) UUID categoryId,
+        @RequestParam(required = false) List<UUID> categoryIds,
         @RequestParam(required = false) BigDecimal minPrice,
         @RequestParam(required = false) BigDecimal maxPrice,
         @RequestParam(required = false) BigDecimal minCondition,
@@ -49,7 +51,7 @@ public class ProductController {
         @PageableDefault(size = 20) Pageable pageable
     ) {
         ProductFilterRequest filter = new ProductFilterRequest(
-            keyword, brandId, categoryId, minPrice, maxPrice, minCondition, maxCondition, status
+            keyword, brandId, categoryId, categoryIds, minPrice, maxPrice, minCondition, maxCondition, status
         );
         return ResponseEntity.ok(ApiResponse.ok("Fetched products", productService.getProducts(filter, pageable)));
     }

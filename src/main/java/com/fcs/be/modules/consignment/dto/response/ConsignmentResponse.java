@@ -1,6 +1,7 @@
 package com.fcs.be.modules.consignment.dto.response;
 
 import com.fcs.be.common.enums.ConsignmentRequestStatus;
+import java.time.Instant;
 import java.util.UUID;
 
 public record ConsignmentResponse(
@@ -8,6 +9,7 @@ public record ConsignmentResponse(
     UUID consignorId,
     String code,
     ConsignmentRequestStatus status,
-    String note
+    String note,
+    Instant createdAt
 ) {
 }

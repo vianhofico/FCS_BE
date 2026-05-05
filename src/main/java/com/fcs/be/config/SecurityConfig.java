@@ -51,6 +51,8 @@ public class SecurityConfig {
                     "/api/v1/media"
                 ).permitAll()
                 .requestMatchers("/api/v1/iam/roles/**", "/api/v1/iam/permissions/**").hasRole("ADMIN")
+                .requestMatchers("/api/v1/iam/users/*/addresses", "/api/v1/iam/users/addresses/**").authenticated()
+                .requestMatchers("/api/v1/iam/users/**").hasAnyRole("ADMIN", "MANAGER")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

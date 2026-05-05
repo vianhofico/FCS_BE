@@ -67,6 +67,7 @@ class ProductSearchIT {
             null,
             null,
             null,
+            null,
             ProductStatus.SELLING
         );
 
@@ -91,6 +92,7 @@ class ProductSearchIT {
         createProduct(consignor, "CONS-PS-004", "SKU-PS-004", "Product B", new BigDecimal("300000"), ProductStatus.SELLING);
 
         ProductFilterRequest filter = new ProductFilterRequest(
+            null,
             null,
             null,
             null,

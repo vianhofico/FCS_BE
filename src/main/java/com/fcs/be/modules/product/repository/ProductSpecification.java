@@ -31,7 +31,10 @@ public class ProductSpecification {
                 predicates.add(cb.equal(root.get("brand").get("id"), filter.brandId()));
             }
 
-            if (filter.categoryId() != null && !filter.categoryId().toString().isBlank()) {
+            if (filter.categoryIds() != null && !filter.categoryIds().isEmpty()) {
+                var categoryJoin = root.join("productCategories");
+                predicates.add(categoryJoin.get("category").get("id").in(filter.categoryIds()));
+            } else if (filter.categoryId() != null && !filter.categoryId().toString().isBlank()) {
                 var categoryJoin = root.join("productCategories");
                 predicates.add(cb.equal(categoryJoin.get("category").get("id"), filter.categoryId()));
             }
