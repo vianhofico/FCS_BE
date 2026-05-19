@@ -10,6 +10,7 @@ import com.fcs.be.modules.order.repository.OrderStatusHistoryRepository;
 import com.fcs.be.modules.payment.dto.request.PayOsWebhookRequest;
 import com.fcs.be.modules.payment.dto.request.PayOsWebhookRequest.PayOsWebhookData;
 import com.fcs.be.modules.payment.entity.PaymentTransaction;
+import com.fcs.be.modules.payment.entity.PaymentSession;
 import com.fcs.be.modules.payment.repository.PaymentTransactionRepository;
 import com.fcs.be.modules.payment.repository.PaymentSessionRepository;
 import java.time.Instant;
@@ -57,7 +58,8 @@ public class PaymentWebhookService {
     public void handlePayOsWebhook(PayOsWebhookRequest request) {
         PayOsWebhookData data = request.data();
         if (data == null) {
-            throw new IllegalArgumentException("Missing PayOS webhook data");
+            log.info("Received PayOS webhook verification/test request (data is null). Skipping processing.");
+            return;
         }
 
         log.info("Received PayOS webhook: code={}, paymentLinkId={}, orderCode={}, reference={}",
@@ -118,18 +120,18 @@ public class PaymentWebhookService {
             return;
         }
 
-        // All checks passed: mark order paid
-        order.setStatus(OrderStatus.PAID);
+        // All checks passed: mark order paid and confirm it
+        order.setStatus(OrderStatus.CONFIRMED);
         Order savedOrder = orderRepository.save(order);
         payOsPaymentService.markSessionPaid(data.paymentLinkId());
         orderStatusHistoryRepository.save(OrderStatusHistory.builder()
             .order(savedOrder)
             .fromStatus(OrderStatus.PENDING_PAYMENT.name())
-            .toStatus(OrderStatus.PAID.name())
+            .toStatus(OrderStatus.CONFIRMED.name())
             .reason("PayOS payment confirmed: " + data.reference())
             .build());
 
-        log.info("Order {} marked PAID from PayOS webhook (paymentLinkId={}, reference={})",
+        log.info("Order {} marked CONFIRMED from PayOS webhook (paymentLinkId={}, reference={})",
             savedOrder.getId(), data.paymentLinkId(), data.reference());
     }
 
@@ -141,19 +143,42 @@ public class PaymentWebhookService {
     }
 
     private Optional<Order> resolveOrder(PayOsWebhookData data) {
+        // 1. Try to resolve via payment session by orderCode hash
+        if (data.orderCode() != null) {
+            Optional<PaymentSession> session = paymentSessionRepository.findByProviderAndProviderOrderCode(PAYOS_PROVIDER, data.orderCode().toString());
+            if (session.isPresent()) {
+                return Optional.ofNullable(session.get().getOrder());
+            }
+        }
+
+        // 2. Try to extract order code from description using regex (e.g. ORD-A1B2C3D4)
         if (data.description() != null && !data.description().isBlank()) {
+            java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("ORD-[A-Z0-9]{8}", java.util.regex.Pattern.CASE_INSENSITIVE);
+            java.util.regex.Matcher matcher = pattern.matcher(data.description());
+            if (matcher.find()) {
+                String extractedOrderCode = matcher.group().toUpperCase();
+                Optional<Order> byExtractedCode = orderRepository.findByOrderCodeAndIsDeletedFalse(extractedOrderCode);
+                if (byExtractedCode.isPresent()) {
+                    return byExtractedCode;
+                }
+            }
+
+            // Fallback to exact match on description
             Optional<Order> byDescription = orderRepository.findByOrderCodeAndIsDeletedFalse(data.description());
             if (byDescription.isPresent()) {
                 return byDescription;
             }
         }
+
+        // 3. Try to resolve via database search directly (for legacy/custom orderCode strings)
         if (data.orderCode() != null) {
             Optional<Order> byOrderCode = orderRepository.findByOrderCodeAndIsDeletedFalse(data.orderCode().toString());
             if (byOrderCode.isPresent()) {
                 return byOrderCode;
             }
         }
-        // Try resolving via payment session (paymentLinkId) as fallback
+
+        // 4. Try resolving via payment session (paymentLinkId) as fallback
         if (data.paymentLinkId() != null && !data.paymentLinkId().isBlank()) {
             return paymentSessionRepository.findByPaymentLinkId(data.paymentLinkId())
                 .map(session -> session.getOrder());

@@ -14,4 +14,6 @@ public interface PaymentSessionRepository extends JpaRepository<PaymentSession, 
     );
 
     Optional<PaymentSession> findByPaymentLinkId(String paymentLinkId);
+
+    Optional<PaymentSession> findByProviderAndProviderOrderCode(String provider, String providerOrderCode);
 }

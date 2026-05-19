@@ -107,7 +107,7 @@ public class PayOsPaymentService {
                 order.getOrderCode(),
                 order.getStatus(),
                 null,
-                order.getStatus() == OrderStatus.PAID,
+                order.getStatus() == OrderStatus.PAID || order.getStatus() == OrderStatus.CONFIRMED,
                 order.getTotalAmount(),
                 null,
                 null,
@@ -120,7 +120,7 @@ public class PayOsPaymentService {
             order.getOrderCode(),
             order.getStatus(),
             session.getStatus(),
-            order.getStatus() == OrderStatus.PAID,
+            order.getStatus() == OrderStatus.PAID || order.getStatus() == OrderStatus.CONFIRMED,
             session.getAmount(),
             session.getExpiresAt(),
             session.getCheckoutUrl(),
@@ -179,7 +179,7 @@ public class PayOsPaymentService {
 
         try {
             // Prepare payment data
-            int orderCode = (int) (Math.abs(order.getId().getMostSignificantBits() % 9_000_000_000L) + 1_000_000_000L);
+            long orderCode = (long) (Math.abs(order.getId().getMostSignificantBits() % 9_000_000_000L) + 1_000_000_000L);
             String description = order.getOrderCode() != null ? order.getOrderCode() : "Order " + order.getId();
             int amountInt = order.getTotalAmount() != null ? order.getTotalAmount().intValue() : 0;
 

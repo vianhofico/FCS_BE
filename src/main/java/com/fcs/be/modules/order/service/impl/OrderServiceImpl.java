@@ -140,7 +140,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private OrderStatus resolveInitialStatus(String paymentMethod) {
-        return "COD".equalsIgnoreCase(paymentMethod) ? OrderStatus.CONFIRMED : OrderStatus.PENDING_PAYMENT;
+        return OrderStatus.PENDING_PAYMENT;
     }
 
     @Override
