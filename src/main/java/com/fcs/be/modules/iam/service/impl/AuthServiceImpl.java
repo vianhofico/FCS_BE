@@ -13,14 +13,13 @@ import com.fcs.be.modules.iam.dto.request.ResetPasswordRequest;
 import com.fcs.be.modules.iam.dto.response.AuthResponse;
 import com.fcs.be.modules.iam.entity.AuthIdentity;
 import com.fcs.be.modules.iam.entity.RefreshToken;
-import com.fcs.be.modules.iam.repository.UserRoleRepository;
 import com.fcs.be.modules.iam.entity.User;
 import com.fcs.be.modules.iam.repository.AuthIdentityRepository;
 import com.fcs.be.modules.iam.repository.RefreshTokenRepository;
 import com.fcs.be.modules.iam.repository.UserRepository;
 import com.fcs.be.modules.iam.service.interfaces.AuthService;
 import com.fcs.be.modules.iam.service.interfaces.JwtTokenService;
-import io.jsonwebtoken.Claims;
+import com.fcs.be.modules.iam.service.interfaces.TokenIssueService;
 import io.jsonwebtoken.JwtException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -28,11 +27,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.HexFormat;
-import java.util.Map;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,10 +45,11 @@ public class AuthServiceImpl implements AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final WalletRepository walletRepository;
     private final JwtTokenService jwtTokenService;
+    private final TokenIssueService tokenIssueService;
     private final PasswordEncoder passwordEncoder;
-    private final UserRoleRepository userRoleRepository;
     private final StringRedisTemplate redisTemplate;
     private final EmailService emailService;
+    private final String passwordResetBaseUrl;
 
     public AuthServiceImpl(
         UserRepository userRepository,
@@ -58,20 +57,22 @@ public class AuthServiceImpl implements AuthService {
         RefreshTokenRepository refreshTokenRepository,
         WalletRepository walletRepository,
         JwtTokenService jwtTokenService,
+        TokenIssueService tokenIssueService,
         PasswordEncoder passwordEncoder,
-        UserRoleRepository userRoleRepository,
         StringRedisTemplate redisTemplate,
-        EmailService emailService
+        EmailService emailService,
+        @Value("${app.auth.password-reset-base-url:http://localhost:5173/auth/reset-password}") String passwordResetBaseUrl
     ) {
         this.userRepository = userRepository;
         this.authIdentityRepository = authIdentityRepository;
         this.refreshTokenRepository = refreshTokenRepository;
         this.walletRepository = walletRepository;
         this.jwtTokenService = jwtTokenService;
+        this.tokenIssueService = tokenIssueService;
         this.passwordEncoder = passwordEncoder;
-        this.userRoleRepository = userRoleRepository;
         this.redisTemplate = redisTemplate;
         this.emailService = emailService;
+        this.passwordResetBaseUrl = passwordResetBaseUrl;
     }
 
     @Override
@@ -87,6 +88,7 @@ public class AuthServiceImpl implements AuthService {
         User user = User.builder()
             .username(request.username())
             .email(request.email())
+            .fullName(request.fullName())
             .passwordHash(passwordEncoder.encode(request.password()))
             .phone(request.phone())
             .status(UserStatus.ACTIVE)
@@ -110,7 +112,7 @@ public class AuthServiceImpl implements AuthService {
             .build();
         walletRepository.save(wallet);
 
-        return issueTokenPair(savedUser, savedIdentity);
+        return tokenIssueService.issueTokenPair(savedUser, savedIdentity);
     }
 
     @Override
@@ -134,7 +136,7 @@ public class AuthServiceImpl implements AuthService {
         user.setLastLoginAt(Instant.now());
         userRepository.save(user);
 
-        return issueTokenPair(user, identity);
+        return tokenIssueService.issueTokenPair(user, identity);
     }
 
     @Override
@@ -161,39 +163,13 @@ public class AuthServiceImpl implements AuthService {
         stored.setRevokeReason("rotated");
         refreshTokenRepository.save(stored);
 
-        return issueTokenPair(stored.getUser(), stored.getIdentity());
+        return tokenIssueService.issueTokenPair(stored.getUser(), stored.getIdentity());
     }
 
     @Override
     @Transactional
     public void logout(UUID userId) {
         refreshTokenRepository.revokeAllByUserId(userId, "logout", Instant.now());
-    }
-
-    @Transactional
-    private AuthResponse issueTokenPair(User user, AuthIdentity identity) {
-        List<String> roles = userRoleRepository.findByUserId(user.getId()).stream()
-            .map(ur -> ur.getRole().getName())
-            .toList();
-
-        Map<String, Object> claims = Map.of(
-            "username", user.getUsername(),
-            "roles", roles
-        );
-        String accessToken = jwtTokenService.generateAccessToken(user.getId(), claims);
-        String rawRefreshToken = jwtTokenService.generateRefreshToken(user.getId(), claims);
-
-        Claims refreshClaims = jwtTokenService.parseRefreshToken(rawRefreshToken);
-        RefreshToken token = RefreshToken.builder()
-            .user(user)
-            .identity(identity)
-            .tokenHash(hashToken(rawRefreshToken))
-            .issuedAt(refreshClaims.getIssuedAt().toInstant())
-            .expiresAt(refreshClaims.getExpiration().toInstant())
-            .build();
-        refreshTokenRepository.save(token);
-
-        return new AuthResponse(accessToken, rawRefreshToken, user.getId(), user.getUsername(), user.getEmail(), roles);
     }
 
     private String hashToken(String token) {
@@ -220,8 +196,7 @@ public class AuthServiceImpl implements AuthService {
         // Save to Redis with 15 mins TTL
         redisTemplate.opsForValue().set(redisKey, user.getId().toString(), 15, TimeUnit.MINUTES);
 
-        // Generate reset link (assuming frontend is running on localhost:3000, should be in config in a real app)
-        String resetLink = "http://localhost:3000/reset-password?token=" + token;
+        String resetLink = passwordResetBaseUrl + "?token=" + token;
 
         emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
     }

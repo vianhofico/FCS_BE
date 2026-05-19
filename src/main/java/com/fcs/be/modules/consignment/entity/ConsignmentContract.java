@@ -12,6 +12,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,6 +40,24 @@ public class ConsignmentContract extends SoftDeleteEntity {
 
     @Column(name = "signed_at")
     private Instant signedAt;
+
+    @Column(name = "signed_by_user_id", length = 36)
+    private UUID signedByUserId;
+
+    @Column(name = "signed_by_name", length = 180)
+    private String signedByName;
+
+    @Column(name = "signature_method", length = 50)
+    private String signatureMethod;
+
+    @Column(name = "signature_ip_address", length = 80)
+    private String signatureIpAddress;
+
+    @Column(name = "signature_user_agent", length = 500)
+    private String signatureUserAgent;
+
+    @Column(name = "signature_hash", length = 128)
+    private String signatureHash;
 
     @Column(name = "valid_until")
     private Instant validUntil;

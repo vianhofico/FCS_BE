@@ -1,6 +1,7 @@
 package com.fcs.be.modules.iam.repository;
 
 import com.fcs.be.modules.iam.entity.User;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,4 +21,6 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
     Optional<User> findByUsernameOrEmail(String identifier);
 
     List<User> findByIsDeletedFalseOrderByCreatedAtDesc();
+
+    Long countByIsDeletedFalseAndCreatedAtGreaterThanEqual(Instant createdAt);
 }

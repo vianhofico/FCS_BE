@@ -8,6 +8,13 @@ public record UpdateUserProfileRequest(
     @Size(min = 3, max = 80, message = "Username must be between 3 and 80 characters")
     String username,
 
+    @Size(max = 120, message = "Full name must be at most 120 characters")
+    String fullName,
+
     @Size(max = 30, message = "Phone must be at most 30 characters")
     String phone
-) {}
+) {
+    public UpdateUserProfileRequest(String username, String phone) {
+        this(username, null, phone);
+    }
+}

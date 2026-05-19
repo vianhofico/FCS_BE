@@ -18,6 +18,9 @@ server:
 app:
   cors:
     allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173,http://127.0.0.1:5173,http://[::1]:5173}
+  oauth2:
+    success-redirect-uri: ${OAUTH2_SUCCESS_REDIRECT_URI:http://localhost:5173/auth/oauth2/callback}
+    failure-redirect-uri: ${OAUTH2_FAILURE_REDIRECT_URI:http://localhost:5173/auth/login}
   security:
     jwt-secret: ${JWT_SECRET:dev-secret-key-change-me}
     jwt-access-secret: ${JWT_ACCESS_SECRET:dev-access-secret-change-me}
@@ -34,3 +37,11 @@ app:
       bucket: ${MINIO_BUCKET:fcs-media}
       secure: ${MINIO_SECURE:false}
       presigned-max-expiry-seconds: ${MINIO_PRESIGNED_MAX_EXPIRY_SECONDS:604800}
+  payment:
+    payos:
+      client-id: ${PAYOS_CLIENT_ID:}
+      api-key: ${PAYOS_API_KEY:}
+      checksum-key: ${PAYOS_CHECKSUM_KEY:}
+      return-url: ${PAYOS_RETURN_URL:http://localhost:5173/buyer/payments/return}
+      cancel-url: ${PAYOS_CANCEL_URL:http://localhost:5173/buyer/payments/cancel}
+      payment-ttl-minutes: ${PAYOS_PAYMENT_TTL_MINUTES:15}

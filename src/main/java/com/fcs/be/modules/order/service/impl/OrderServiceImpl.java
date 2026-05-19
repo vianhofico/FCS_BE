@@ -9,7 +9,6 @@ import com.fcs.be.modules.financial.entity.Wallet;
 import com.fcs.be.modules.financial.repository.WalletRepository;
 import com.fcs.be.modules.financial.service.interfaces.WalletService;
 import com.fcs.be.modules.iam.entity.User;
-import com.fcs.be.modules.iam.entity.UserAddress;
 import com.fcs.be.modules.iam.repository.UserAddressRepository;
 import com.fcs.be.modules.iam.repository.UserRepository;
 import com.fcs.be.common.response.PageResponse;
@@ -105,7 +104,7 @@ public class OrderServiceImpl implements OrderService {
             .totalAmount(request.totalAmount())
             .paymentMethod(request.paymentMethod())
             .shippingSnapshot(request.shippingSnapshot())
-            .status(OrderStatus.PENDING_PAYMENT)
+            .status(resolveInitialStatus(request.paymentMethod()))
             .shippingAddress(request.shippingAddressId() != null
                 ? userAddressRepository.findByIdAndIsDeletedFalse(request.shippingAddressId())
                     .orElseThrow(() -> new EntityNotFoundException("Shipping address not found"))
@@ -136,8 +135,12 @@ public class OrderServiceImpl implements OrderService {
             orderItemRepository.save(item);
         }
 
-        appendStatusLog(savedOrder, null, OrderStatus.PENDING_PAYMENT, "Order created");
+        appendStatusLog(savedOrder, null, savedOrder.getStatus(), "Order created");
         return orderMapper.toResponse(savedOrder, orderItemRepository.findByOrderIdAndIsDeletedFalse(savedOrder.getId()));
+    }
+
+    private OrderStatus resolveInitialStatus(String paymentMethod) {
+        return "COD".equalsIgnoreCase(paymentMethod) ? OrderStatus.CONFIRMED : OrderStatus.PENDING_PAYMENT;
     }
 
     @Override

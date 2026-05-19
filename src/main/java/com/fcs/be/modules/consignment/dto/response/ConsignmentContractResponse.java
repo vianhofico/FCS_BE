@@ -11,6 +11,12 @@ public record ConsignmentContractResponse(
     BigDecimal commissionRate,
     BigDecimal agreedPrice,
     Instant signedAt,
+    UUID signedByUserId,
+    String signedByName,
+    String signatureMethod,
+    String signatureIpAddress,
+    String signatureUserAgent,
+    String signatureHash,
     Instant validUntil,
     ConsignmentContractStatus status
 ) {}

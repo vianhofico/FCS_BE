@@ -67,12 +67,12 @@ INSERT INTO role_permissions (id, role_id, permission_id, created_at, updated_at
 (UUID(), '22222222-2222-2222-2222-222222222222', '11111111-1111-1111-1111-000000000003', NOW(), NOW(), false),
 (UUID(), '22222222-2222-2222-2222-222222222222', '11111111-1111-1111-1111-000000000004', NOW(), NOW(), false);
 
-INSERT INTO users (id, username, password_hash, email, phone, status, created_at, updated_at, is_deleted) VALUES
-('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'admin', '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', 'admin@fcs.com', '0901000001', 'ACTIVE', NOW(), NOW(), false),
-('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'staff_ken', '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', 'ken@fcs.com', '0901000002', 'ACTIVE', NOW(), NOW(), false),
-('cccccccc-cccc-cccc-cccc-cccccccccccc', 'consignor_jane', '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', 'jane@gmail.com', '0901000003', 'ACTIVE', NOW(), NOW(), false),
-('dddddddd-dddd-dddd-dddd-dddddddddddd', 'buyer_bob', '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', 'bob@gmail.com', '0901000004', 'ACTIVE', NOW(), NOW(), false),
-('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 'buyer_alice', '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', 'alice@gmail.com', '0901000005', 'ACTIVE', NOW(), NOW(), false);
+INSERT INTO users (id, username, password_hash, email, full_name, phone, status, created_at, updated_at, is_deleted) VALUES
+('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'admin', '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', 'admin@fcs.com', 'Admin ReWear', '0901000001', 'ACTIVE', NOW(), NOW(), false),
+('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'staff_ken', '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', 'ken@fcs.com', 'Ken Staff', '0901000002', 'ACTIVE', NOW(), NOW(), false),
+('cccccccc-cccc-cccc-cccc-cccccccccccc', 'consignor_jane', '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', 'jane@gmail.com', 'Jane Consignor', '0901000003', 'ACTIVE', NOW(), NOW(), false),
+('dddddddd-dddd-dddd-dddd-dddddddddddd', 'buyer_bob', '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', 'bob@gmail.com', 'Bob Buyer', '0901000004', 'ACTIVE', NOW(), NOW(), false),
+('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 'buyer_alice', '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', 'alice@gmail.com', 'Alice Buyer', '0901000005', 'ACTIVE', NOW(), NOW(), false);
 
 INSERT INTO user_roles (id, user_id, role_id, created_at, updated_at, is_deleted) VALUES
 (UUID(), 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '11111111-1111-1111-1111-111111111111', NOW(), NOW(), false),

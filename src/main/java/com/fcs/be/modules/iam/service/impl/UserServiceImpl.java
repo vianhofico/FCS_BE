@@ -73,6 +73,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setUsername(request.username());
+        user.setFullName(request.fullName());
         user.setPhone(request.phone());
         return userMapper.toSummary(userRepository.save(user));
     }

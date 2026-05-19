@@ -130,10 +130,10 @@ BEGIN
     SET brand_id = CONCAT('bd000000-0000-0000-0000-', LPAD(((i - 1) % 10) + 1, 12, '0'));
     SET category_id = CONCAT('ca000000-0000-0000-0000-', LPAD(((i - 1) % 8) + 1, 12, '0'));
 
-    INSERT IGNORE INTO users (id, username, password_hash, email, phone, status, created_at, updated_at, is_deleted)
+    INSERT IGNORE INTO users (id, username, password_hash, email, full_name, phone, status, created_at, updated_at, is_deleted)
     VALUES
-      (buyer_id, CONCAT('test_buyer_', n), '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', CONCAT('test_buyer_', n, '@example.com'), CONCAT('091', LPAD(i, 7, '0')), 'ACTIVE', NOW(6), NOW(6), false),
-      (seller_id, CONCAT('test_seller_', n), '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', CONCAT('test_seller_', n, '@example.com'), CONCAT('092', LPAD(i, 7, '0')), 'ACTIVE', NOW(6), NOW(6), false);
+      (buyer_id, CONCAT('test_buyer_', n), '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', CONCAT('test_buyer_', n, '@example.com'), CONCAT('Test Buyer ', n), CONCAT('091', LPAD(i, 7, '0')), 'ACTIVE', NOW(6), NOW(6), false),
+      (seller_id, CONCAT('test_seller_', n), '$2a$10$8.UnVuG9HHgffUDAlk8q6OuVGkqCYAdVqvoLSuYDM6W61qqSNo62C', CONCAT('test_seller_', n, '@example.com'), CONCAT('Test Seller ', n), CONCAT('092', LPAD(i, 7, '0')), 'ACTIVE', NOW(6), NOW(6), false);
 
     INSERT IGNORE INTO auth_identities (id, user_id, provider, provider_email, provider_user_id, password_hash, email_verified, is_primary, created_at, updated_at)
     VALUES

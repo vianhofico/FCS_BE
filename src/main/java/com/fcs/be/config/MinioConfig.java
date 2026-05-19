@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(prefix = "app.storage.minio", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class MinioConfig {
 
     @Bean
@@ -20,6 +19,7 @@ public class MinioConfig {
     }
 
     @Bean
+    @ConditionalOnProperty(prefix = "app.storage.minio", name = "enabled", havingValue = "true", matchIfMissing = true)
     public MinioBucketInitializer minioBucketInitializer(
         MinioClient minioClient,
         AppConfigHelper appConfigHelper

@@ -4,6 +4,7 @@ import com.fcs.be.common.enums.ConsignmentContractStatus;
 import com.fcs.be.common.enums.ConsignmentRequestStatus;
 import com.fcs.be.common.response.PageResponse;
 import com.fcs.be.modules.consignment.dto.request.CreateConsignmentContractRequest;
+import com.fcs.be.modules.consignment.dto.request.SignConsignmentContractRequest;
 import com.fcs.be.modules.consignment.dto.request.UpdateConsignmentContractStatusRequest;
 import com.fcs.be.modules.consignment.dto.response.ConsignmentContractResponse;
 import com.fcs.be.modules.consignment.entity.ConsignmentContract;
@@ -13,7 +14,11 @@ import com.fcs.be.modules.consignment.repository.ConsignmentContractRepository;
 import com.fcs.be.modules.consignment.repository.ConsignmentRequestRepository;
 import com.fcs.be.modules.consignment.service.interfaces.ConsignmentContractService;
 import jakarta.persistence.EntityNotFoundException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
+import java.util.HexFormat;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -80,13 +85,34 @@ public class ConsignmentContractServiceImpl implements ConsignmentContractServic
 
     @Override
     @Transactional
-    public ConsignmentContractResponse signContract(UUID id) {
+    public ConsignmentContractResponse signContract(
+        UUID id,
+        UUID userId,
+        SignConsignmentContractRequest request,
+        String ipAddress,
+        String userAgent
+    ) {
+        if (userId == null) {
+            throw new IllegalStateException("Authentication is required to sign a contract");
+        }
+
         ConsignmentContract contract = getContractEntity(id);
         if (contract.getStatus() != ConsignmentContractStatus.DRAFT) {
             throw new IllegalStateException("Only a DRAFT contract can be signed");
         }
+        if (!contract.getRequest().getConsignor().getId().equals(userId)) {
+            throw new IllegalStateException("Only the consignor can sign this contract");
+        }
+
+        Instant signedAt = Instant.now();
         contract.setStatus(ConsignmentContractStatus.SIGNED);
-        contract.setSignedAt(Instant.now());
+        contract.setSignedAt(signedAt);
+        contract.setSignedByUserId(userId);
+        contract.setSignedByName(request.signatureName().trim());
+        contract.setSignatureMethod("INTERNAL_CONFIRMATION");
+        contract.setSignatureIpAddress(ipAddress);
+        contract.setSignatureUserAgent(truncate(userAgent, 500));
+        contract.setSignatureHash(signatureHash(contract, userId, signedAt));
         return consignmentContractMapper.toResponse(contractRepository.save(contract));
     }
 
@@ -96,6 +122,30 @@ public class ConsignmentContractServiceImpl implements ConsignmentContractServic
         ConsignmentContract contract = getContractEntity(id);
         contract.setStatus(request.status());
         return consignmentContractMapper.toResponse(contractRepository.save(contract));
+    }
+
+    private String signatureHash(ConsignmentContract contract, UUID userId, Instant signedAt) {
+        String payload = String.join("|",
+            contract.getId().toString(),
+            contract.getRequest().getId().toString(),
+            userId.toString(),
+            signedAt.toString(),
+            contract.getAgreedPrice().toPlainString(),
+            contract.getCommissionRate().toPlainString()
+        );
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            return HexFormat.of().formatHex(digest.digest(payload.getBytes(StandardCharsets.UTF_8)));
+        } catch (NoSuchAlgorithmException ex) {
+            throw new IllegalStateException("SHA-256 is not available", ex);
+        }
+    }
+
+    private String truncate(String value, int maxLength) {
+        if (value == null || value.length() <= maxLength) {
+            return value;
+        }
+        return value.substring(0, maxLength);
     }
 
     private ConsignmentContract getContractEntity(UUID id) {

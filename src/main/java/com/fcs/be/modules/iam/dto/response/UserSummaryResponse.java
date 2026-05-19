@@ -7,6 +7,7 @@ public record UserSummaryResponse(
     UUID id,
     String username,
     String email,
+    String fullName,
     String phone,
     UserStatus status
 ) {

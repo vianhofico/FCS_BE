@@ -3,7 +3,9 @@ package com.fcs.be.modules.consignment.controller;
 import com.fcs.be.common.response.ApiResponse;
 import com.fcs.be.common.response.PageResponse;
 import com.fcs.be.modules.consignment.dto.request.CreateConsignmentContractRequest;
+import com.fcs.be.modules.consignment.dto.request.SignConsignmentContractRequest;
 import com.fcs.be.modules.consignment.dto.request.UpdateConsignmentContractStatusRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import com.fcs.be.modules.consignment.dto.response.ConsignmentContractResponse;
 import com.fcs.be.modules.consignment.service.interfaces.ConsignmentContractService;
 import jakarta.validation.Valid;
@@ -11,6 +13,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,8 +54,24 @@ public class ConsignmentContractController {
     }
 
     @PatchMapping("/contracts/{id}/sign")
-    public ResponseEntity<ApiResponse<ConsignmentContractResponse>> signContract(@PathVariable UUID id) {
-        return ResponseEntity.ok(ApiResponse.ok("Contract signed", contractService.signContract(id)));
+    public ResponseEntity<ApiResponse<ConsignmentContractResponse>> signContract(
+        @PathVariable UUID id,
+        @AuthenticationPrincipal UUID userId,
+        @Valid @RequestBody SignConsignmentContractRequest request,
+        HttpServletRequest servletRequest
+    ) {
+        String ipAddress = clientIpAddress(servletRequest);
+        String userAgent = servletRequest.getHeader("User-Agent");
+        return ResponseEntity.ok(ApiResponse.ok("Contract signed", contractService.signContract(id, userId, request, ipAddress, userAgent)));
+    }
+
+
+    private String clientIpAddress(HttpServletRequest request) {
+        String forwardedFor = request.getHeader("X-Forwarded-For");
+        if (forwardedFor != null && !forwardedFor.isBlank()) {
+            return forwardedFor.split(",")[0].trim();
+        }
+        return request.getRemoteAddr();
     }
 
     @PatchMapping("/contracts/{id}/status")

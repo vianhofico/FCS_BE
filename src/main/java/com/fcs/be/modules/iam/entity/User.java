@@ -32,6 +32,9 @@ public class User extends SoftDeleteEntity {
     @Column(name = "email", nullable = false, unique = true, length = 180)
     private String email;
 
+    @Column(name = "full_name", length = 120)
+    private String fullName;
+
     @Column(name = "phone", length = 30)
     private String phone;
 

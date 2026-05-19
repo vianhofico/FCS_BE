@@ -11,5 +11,6 @@ public interface AuthMapper {
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "username", source = "user.username")
     @Mapping(target = "email", source = "user.email")
+    @Mapping(target = "fullName", source = "user.fullName")
     AuthResponse toResponse(String accessToken, String refreshToken, User user);
 }

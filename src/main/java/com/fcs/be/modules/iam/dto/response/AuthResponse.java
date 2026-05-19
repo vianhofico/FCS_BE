@@ -9,5 +9,10 @@ public record AuthResponse(
     UUID userId,
     String username,
     String email,
+    String fullName,
     List<String> roles
-) {}
+) {
+    public AuthResponse(String accessToken, String refreshToken, UUID userId, String username, String email, List<String> roles) {
+        this(accessToken, refreshToken, userId, username, email, null, roles);
+    }
+}
