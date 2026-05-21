@@ -34,3 +34,11 @@ app:
       bucket: ${MINIO_BUCKET}
       secure: ${MINIO_SECURE:true}
       presigned-max-expiry-seconds: ${MINIO_PRESIGNED_MAX_EXPIRY_SECONDS:604800}
+
+server:
+  forward-headers-strategy: framework
+  servlet:
+    session:
+      cookie:
+        secure: true
+        same-site: None
