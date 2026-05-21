@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT:6379}
@@ -36,7 +36,7 @@ app:
       presigned-max-expiry-seconds: ${MINIO_PRESIGNED_MAX_EXPIRY_SECONDS:604800}
 
 server:
-  forward-headers-strategy: framework
+  forward-headers-strategy: native
   servlet:
     session:
       cookie:
