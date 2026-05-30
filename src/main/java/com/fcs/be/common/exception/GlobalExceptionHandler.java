@@ -86,6 +86,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleUnhandledException(Exception ex) {
+        ex.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(ApiResponse.error("Internal server error", ErrorCode.INTERNAL_SERVER_ERROR.name()));
     }

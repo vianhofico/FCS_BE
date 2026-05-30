@@ -20,6 +20,10 @@ import com.fcs.be.modules.iam.repository.UserRepository;
 import com.fcs.be.modules.iam.service.interfaces.AuthService;
 import com.fcs.be.modules.iam.service.interfaces.JwtTokenService;
 import com.fcs.be.modules.iam.service.interfaces.TokenIssueService;
+import com.fcs.be.modules.iam.entity.Role;
+import com.fcs.be.modules.iam.entity.UserRole;
+import com.fcs.be.modules.iam.repository.RoleRepository;
+import com.fcs.be.modules.iam.repository.UserRoleRepository;
 import io.jsonwebtoken.JwtException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -50,6 +54,8 @@ public class AuthServiceImpl implements AuthService {
     private final StringRedisTemplate redisTemplate;
     private final EmailService emailService;
     private final String passwordResetBaseUrl;
+    private final RoleRepository roleRepository;
+    private final UserRoleRepository userRoleRepository;
 
     public AuthServiceImpl(
         UserRepository userRepository,
@@ -61,7 +67,9 @@ public class AuthServiceImpl implements AuthService {
         PasswordEncoder passwordEncoder,
         StringRedisTemplate redisTemplate,
         EmailService emailService,
-        @Value("${app.auth.password-reset-base-url:http://localhost:5173/auth/reset-password}") String passwordResetBaseUrl
+        @Value("${app.auth.password-reset-base-url:http://localhost:5173/auth/reset-password}") String passwordResetBaseUrl,
+        RoleRepository roleRepository,
+        UserRoleRepository userRoleRepository
     ) {
         this.userRepository = userRepository;
         this.authIdentityRepository = authIdentityRepository;
@@ -73,6 +81,8 @@ public class AuthServiceImpl implements AuthService {
         this.redisTemplate = redisTemplate;
         this.emailService = emailService;
         this.passwordResetBaseUrl = passwordResetBaseUrl;
+        this.roleRepository = roleRepository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @Override
@@ -94,6 +104,10 @@ public class AuthServiceImpl implements AuthService {
             .status(UserStatus.ACTIVE)
             .build();
         User savedUser = userRepository.save(user);
+
+        Role buyerRole = roleRepository.findByNameAndIsDeletedFalse("BUYER")
+            .orElseGet(() -> roleRepository.save(Role.builder().name("BUYER").description("Buyer role").build()));
+        userRoleRepository.save(UserRole.builder().user(savedUser).role(buyerRole).build());
 
         AuthIdentity identity = AuthIdentity.builder()
             .user(savedUser)
