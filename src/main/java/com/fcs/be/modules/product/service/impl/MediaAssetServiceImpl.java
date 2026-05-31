@@ -119,7 +119,7 @@ public class MediaAssetServiceImpl implements MediaAssetService {
     }
 
     private String publicUrl(String objectKey) {
-        return appConfigHelper.minioEndpoint() + "/" + appConfigHelper.minioBucket() + "/" + objectKey;
+        return appConfigHelper.minioPublicEndpoint() + "/" + appConfigHelper.minioBucket() + "/" + objectKey;
     }
 
     @Override

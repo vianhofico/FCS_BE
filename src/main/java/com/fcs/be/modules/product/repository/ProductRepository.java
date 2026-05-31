@@ -2,6 +2,7 @@ package com.fcs.be.modules.product.repository;
 
 import com.fcs.be.common.enums.ProductStatus;
 import com.fcs.be.modules.product.entity.Product;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,4 +38,14 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
         @Param("sellerId") UUID sellerId,
         @Param("statuses") List<ProductStatus> statuses
     );
+
+    /** Find RESERVED products whose reservation has expired */
+    @Query("""
+        select p from Product p
+        where p.isDeleted = false
+          and p.status = com.fcs.be.common.enums.ProductStatus.RESERVED
+          and p.reservedUntil is not null
+          and p.reservedUntil < :now
+        """)
+    List<Product> findExpiredReservations(@Param("now") Instant now);
 }

@@ -1,7 +1,6 @@
 package com.fcs.be.modules.consignment.service.impl;
 
 import com.fcs.be.common.enums.ConsignmentItemStatus;
-import com.fcs.be.common.enums.ConsignmentRequestStatus;
 import com.fcs.be.modules.consignment.dto.request.CreateConsignmentItemRequest;
 import com.fcs.be.modules.consignment.dto.request.UpdateConsignmentItemStatusRequest;
 import com.fcs.be.modules.consignment.dto.response.ConsignmentItemResponse;
@@ -40,10 +39,6 @@ public class ConsignmentItemServiceImpl implements ConsignmentItemService {
             .findByIdAndIsDeletedFalse(request.requestId())
             .orElseThrow(() -> new EntityNotFoundException("Consignment request not found"));
 
-        if (consignmentRequest.getStatus() != ConsignmentRequestStatus.APPROVED) {
-            throw new IllegalStateException("Can only add item to an APPROVED consignment request");
-        }
-
         if (consignmentItemRepository.findByRequestIdAndIsDeletedFalse(request.requestId()).isPresent()) {
             throw new IllegalStateException("Consignment item already exists for this request");
         }
@@ -52,6 +47,9 @@ public class ConsignmentItemServiceImpl implements ConsignmentItemService {
         item.setRequest(consignmentRequest);
         item.setSuggestedName(request.suggestedName());
         item.setSuggestedPrice(request.suggestedPrice());
+        item.setOriginalPrice(request.originalPrice());
+        item.setSuggestedBrandId(request.suggestedBrandId());
+        item.setSuggestedCategoryId(request.suggestedCategoryId());
         item.setConditionNote(request.conditionNote());
         item.setStatus(ConsignmentItemStatus.PROPOSED);
 

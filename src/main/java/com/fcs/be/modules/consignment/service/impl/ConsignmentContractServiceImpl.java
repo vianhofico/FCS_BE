@@ -78,9 +78,9 @@ public class ConsignmentContractServiceImpl implements ConsignmentContractServic
 
     @Override
     public ConsignmentContractResponse getContractByRequest(UUID requestId) {
-        ConsignmentContract contract = contractRepository.findByRequestIdAndIsDeletedFalse(requestId)
-            .orElseThrow(() -> new EntityNotFoundException("Contract not found for this request"));
-        return consignmentContractMapper.toResponse(contract);
+        return contractRepository.findByRequestIdAndIsDeletedFalse(requestId)
+            .map(consignmentContractMapper::toResponse)
+            .orElse(null);
     }
 
     @Override

@@ -56,6 +56,10 @@ public class AppConfigHelper {
         return minioProperties.endpoint();
     }
 
+    public String minioPublicEndpoint() {
+        return minioProperties.publicEndpoint();
+    }
+
     public String minioAccessKey() {
         return minioProperties.accessKey();
     }

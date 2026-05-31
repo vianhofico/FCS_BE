@@ -9,5 +9,8 @@ public record CreateConsignmentItemRequest(
     @NotNull UUID requestId,
     @NotBlank String suggestedName,
     BigDecimal suggestedPrice,
+    BigDecimal originalPrice,
+    UUID suggestedBrandId,
+    UUID suggestedCategoryId,
     String conditionNote
 ) {}

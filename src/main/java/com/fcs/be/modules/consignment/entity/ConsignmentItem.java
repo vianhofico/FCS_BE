@@ -11,7 +11,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,6 +38,18 @@ public class ConsignmentItem extends SoftDeleteEntity {
 
     @Column(name = "suggested_price", precision = 19, scale = 4)
     private BigDecimal suggestedPrice;
+
+    @Column(name = "original_price", precision = 19, scale = 4)
+    private BigDecimal originalPrice;
+
+    // UUID references only (no FK) — seller suggestions, manager assigns officially later
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "suggested_brand_id", length = 36)
+    private UUID suggestedBrandId;
+
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "suggested_category_id", length = 36)
+    private UUID suggestedCategoryId;
 
     @Column(name = "condition_note", length = 1000)
     private String conditionNote;

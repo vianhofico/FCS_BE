@@ -1,14 +1,17 @@
 package com.fcs.be.modules.consignment.service.impl;
 
+import com.fcs.be.common.enums.ConsignmentItemStatus;
 import com.fcs.be.common.enums.ConsignmentRequestStatus;
 import com.fcs.be.common.response.PageResponse;
 import com.fcs.be.modules.consignment.dto.request.ConsignmentFilterRequest;
 import com.fcs.be.modules.consignment.dto.request.CreateConsignmentRequest;
 import com.fcs.be.modules.consignment.dto.request.UpdateConsignmentRequest;
 import com.fcs.be.modules.consignment.dto.response.ConsignmentResponse;
+import com.fcs.be.modules.consignment.entity.ConsignmentItem;
 import com.fcs.be.modules.consignment.entity.ConsignmentRequest;
 import com.fcs.be.modules.consignment.entity.ConsignmentStatusHistory;
 import com.fcs.be.modules.consignment.mapper.ConsignmentMapper;
+import com.fcs.be.modules.consignment.repository.ConsignmentItemRepository;
 import com.fcs.be.modules.consignment.repository.ConsignmentRequestRepository;
 import com.fcs.be.modules.consignment.repository.ConsignmentSpecification;
 import com.fcs.be.modules.consignment.repository.ConsignmentStatusHistoryRepository;
@@ -25,17 +28,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class ConsignmentServiceImpl implements ConsignmentService {
 
     private final ConsignmentRequestRepository consignmentRequestRepository;
+    private final ConsignmentItemRepository consignmentItemRepository;
     private final ConsignmentStatusHistoryRepository consignmentStatusHistoryRepository;
     private final UserRepository userRepository;
     private final ConsignmentMapper consignmentMapper;
 
     public ConsignmentServiceImpl(
         ConsignmentRequestRepository consignmentRequestRepository,
+        ConsignmentItemRepository consignmentItemRepository,
         ConsignmentStatusHistoryRepository consignmentStatusHistoryRepository,
         UserRepository userRepository,
         ConsignmentMapper consignmentMapper
     ) {
         this.consignmentRequestRepository = consignmentRequestRepository;
+        this.consignmentItemRepository = consignmentItemRepository;
         this.consignmentStatusHistoryRepository = consignmentStatusHistoryRepository;
         this.userRepository = userRepository;
         this.consignmentMapper = consignmentMapper;
@@ -59,6 +65,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     public ConsignmentResponse createConsignment(CreateConsignmentRequest request) {
         User consignor = userRepository.findByIdAndIsDeletedFalse(request.consignorId())
             .orElseThrow(() -> new EntityNotFoundException("Consignor not found"));
+
         ConsignmentRequest entity = ConsignmentRequest.builder()
             .consignor(consignor)
             .code(request.code())
@@ -67,6 +74,19 @@ public class ConsignmentServiceImpl implements ConsignmentService {
             .build();
         ConsignmentRequest saved = consignmentRequestRepository.save(entity);
         appendStatusLog(saved, null, saved.getStatus(), "Consignment created");
+
+        // Auto-create ConsignmentItem with seller-provided details
+        ConsignmentItem item = new ConsignmentItem();
+        item.setRequest(saved);
+        item.setSuggestedName(request.suggestedName());
+        item.setSuggestedPrice(request.suggestedPrice());
+        item.setOriginalPrice(request.originalPrice());
+        item.setSuggestedBrandId(request.suggestedBrandId());
+        item.setSuggestedCategoryId(request.suggestedCategoryId());
+        item.setConditionNote(request.conditionNote());
+        item.setStatus(ConsignmentItemStatus.PROPOSED);
+        consignmentItemRepository.save(item);
+
         return consignmentMapper.toResponse(saved);
     }
 

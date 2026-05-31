@@ -9,6 +9,9 @@ public record ConsignmentItemResponse(
     UUID requestId,
     String suggestedName,
     BigDecimal suggestedPrice,
+    BigDecimal originalPrice,
+    UUID suggestedBrandId,
+    UUID suggestedCategoryId,
     String conditionNote,
     ConsignmentItemStatus status,
     String rejectionReason
