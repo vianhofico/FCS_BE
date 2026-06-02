@@ -48,6 +48,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PageResponse<ProductResponse> getProducts(ProductFilterRequest filter, Pageable pageable) {
         Page<ProductResponse> page = productRepository
             .findAll(ProductSpecification.from(filter), pageable)
@@ -56,6 +57,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ProductResponse getProduct(UUID id) {
         return productMapper.toResponse(getProductEntity(id));
     }
