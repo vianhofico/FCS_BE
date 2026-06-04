@@ -8,5 +8,6 @@ public record CartItemResponse(
     UUID productId,
     String productName,
     String sku,
-    BigDecimal salePrice
+    BigDecimal salePrice,
+    String productImage
 ) {}

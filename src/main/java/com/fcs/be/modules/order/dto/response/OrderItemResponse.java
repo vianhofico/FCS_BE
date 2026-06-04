@@ -9,6 +9,7 @@ public record OrderItemResponse(
     String skuSnapshot,
     String productNameSnapshot,
     String conditionSnapshot,
-    BigDecimal priceAtPurchase
+    BigDecimal priceAtPurchase,
+    String productImage
 ) {
 }

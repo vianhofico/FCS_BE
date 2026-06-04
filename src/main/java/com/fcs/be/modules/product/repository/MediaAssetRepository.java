@@ -14,4 +14,8 @@ public interface MediaAssetRepository extends JpaRepository<MediaAsset, UUID> {
     List<MediaAsset> findByOwnerTypeAndOwnerIdAndIsDeletedFalseOrderByDisplayOrderAsc(
         MediaOwnerType ownerType, UUID ownerId
     );
+
+    Optional<MediaAsset> findFirstByOwnerTypeAndOwnerIdAndIsDeletedFalseOrderByIsPrimaryDescDisplayOrderAsc(
+        MediaOwnerType ownerType, UUID ownerId
+    );
 }

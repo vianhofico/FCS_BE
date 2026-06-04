@@ -1,5 +1,6 @@
 package com.fcs.be.modules.product.service.impl;
 
+import com.fcs.be.common.enums.MediaOwnerType;
 import com.fcs.be.common.enums.ProductStatus;
 import com.fcs.be.common.response.PageResponse;
 import com.fcs.be.modules.catalog.entity.Brand;
@@ -10,9 +11,11 @@ import com.fcs.be.modules.product.dto.request.CreateProductRequest;
 import com.fcs.be.modules.product.dto.request.ProductFilterRequest;
 import com.fcs.be.modules.product.dto.request.UpdateProductRequest;
 import com.fcs.be.modules.product.dto.response.ProductResponse;
+import com.fcs.be.modules.product.entity.MediaAsset;
 import com.fcs.be.modules.product.entity.Product;
 import com.fcs.be.modules.product.entity.ProductStatusHistory;
 import com.fcs.be.modules.product.mapper.ProductMapper;
+import com.fcs.be.modules.product.repository.MediaAssetRepository;
 import com.fcs.be.modules.product.repository.ProductRepository;
 import com.fcs.be.modules.product.repository.ProductSpecification;
 import com.fcs.be.modules.product.repository.ProductStatusHistoryRepository;
@@ -32,19 +35,22 @@ public class ProductServiceImpl implements ProductService {
     private final BrandRepository brandRepository;
     private final ProductStatusHistoryRepository productStatusHistoryRepository;
     private final ProductMapper productMapper;
+    private final MediaAssetRepository mediaAssetRepository;
 
     public ProductServiceImpl(
         ProductRepository productRepository,
         ConsignmentItemRepository consignmentItemRepository,
         BrandRepository brandRepository,
         ProductStatusHistoryRepository productStatusHistoryRepository,
-        ProductMapper productMapper
+        ProductMapper productMapper,
+        MediaAssetRepository mediaAssetRepository
     ) {
         this.productRepository = productRepository;
         this.consignmentItemRepository = consignmentItemRepository;
         this.brandRepository = brandRepository;
         this.productStatusHistoryRepository = productStatusHistoryRepository;
         this.productMapper = productMapper;
+        this.mediaAssetRepository = mediaAssetRepository;
     }
 
     @Override
@@ -52,14 +58,25 @@ public class ProductServiceImpl implements ProductService {
     public PageResponse<ProductResponse> getProducts(ProductFilterRequest filter, Pageable pageable) {
         Page<ProductResponse> page = productRepository
             .findAll(ProductSpecification.from(filter), pageable)
-            .map(productMapper::toResponse);
+            .map(p -> withImage(productMapper.toResponse(p)));
         return PageResponse.of(page);
     }
 
     @Override
     @Transactional(readOnly = true)
     public ProductResponse getProduct(UUID id) {
-        return productMapper.toResponse(getProductEntity(id));
+        return withImage(productMapper.toResponse(getProductEntity(id)));
+    }
+
+    private ProductResponse withImage(ProductResponse r) {
+        String imageUrl = mediaAssetRepository
+            .findFirstByOwnerTypeAndOwnerIdAndIsDeletedFalseOrderByIsPrimaryDescDisplayOrderAsc(
+                MediaOwnerType.PRODUCT, r.id())
+            .map(MediaAsset::getUrl)
+            .orElse(null);
+        if (imageUrl == null) return r;
+        return new ProductResponse(r.id(), r.consignmentItemId(), r.brandId(), r.sku(), r.name(),
+            r.description(), r.conditionPercent(), r.originalPrice(), r.salePrice(), r.status(), imageUrl);
     }
 
     @Override

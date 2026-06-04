@@ -9,5 +9,6 @@ public record WishlistItemResponse(
     String productSku,
     String productName,
     BigDecimal productSalePrice,
-    String productStatus
+    String productStatus,
+    String imageUrl
 ) {}

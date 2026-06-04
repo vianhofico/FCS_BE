@@ -14,6 +14,7 @@ public record ProductResponse(
     BigDecimal conditionPercent,
     BigDecimal originalPrice,
     BigDecimal salePrice,
-    ProductStatus status
+    ProductStatus status,
+    String imageUrl
 ) {
 }
