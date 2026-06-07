@@ -8,6 +8,7 @@ public record ProductResponse(
     UUID id,
     UUID consignmentItemId,
     UUID brandId,
+    String brandName,
     String sku,
     String name,
     String description,

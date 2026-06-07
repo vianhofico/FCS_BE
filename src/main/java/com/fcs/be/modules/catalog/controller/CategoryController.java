@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/catalog/categories")
+@RequestMapping({"/api/v1/catalog/categories", "/api/v1/categories"})
 public class CategoryController {
 
     private final CategoryService categoryService;

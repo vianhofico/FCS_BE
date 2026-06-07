@@ -75,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
             .map(MediaAsset::getUrl)
             .orElse(null);
         if (imageUrl == null) return r;
-        return new ProductResponse(r.id(), r.consignmentItemId(), r.brandId(), r.sku(), r.name(),
+        return new ProductResponse(r.id(), r.consignmentItemId(), r.brandId(), r.brandName(), r.sku(), r.name(),
             r.description(), r.conditionPercent(), r.originalPrice(), r.salePrice(), r.status(), imageUrl);
     }
 

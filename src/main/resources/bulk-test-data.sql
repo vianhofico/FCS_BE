@@ -16,13 +16,13 @@ INSERT IGNORE INTO brands (id, name, logo_url, description, is_active, created_a
 ('bd000000-0000-0000-0000-000000000010', 'Versace', 'https://picsum.photos/seed/brand-versace/240/120', 'Phong cach Y noi bat', true, NOW(6), NOW(6), false);
 
 INSERT IGNORE INTO categories (id, parent_id, name, slug, is_active, created_at, updated_at, is_deleted) VALUES
-('ca000000-0000-0000-0000-000000000001', NULL, 'Phu kien', 'accessories', true, NOW(6), NOW(6), false),
-('ca000000-0000-0000-0000-000000000002', 'ca000000-0000-0000-0000-000000000001', 'Vi', 'wallets', true, NOW(6), NOW(6), false),
-('ca000000-0000-0000-0000-000000000003', 'ca000000-0000-0000-0000-000000000001', 'Dong ho', 'watches', true, NOW(6), NOW(6), false),
-('ca000000-0000-0000-0000-000000000004', 'ca000000-0000-0000-0000-000000000001', 'That lung', 'belts', true, NOW(6), NOW(6), false),
-('ca000000-0000-0000-0000-000000000005', NULL, 'Quan ao', 'clothing', true, NOW(6), NOW(6), false),
-('ca000000-0000-0000-0000-000000000006', 'ca000000-0000-0000-0000-000000000005', 'Ao khoac', 'outerwear', true, NOW(6), NOW(6), false),
-('ca000000-0000-0000-0000-000000000007', 'ca000000-0000-0000-0000-000000000005', 'Dam', 'dresses', true, NOW(6), NOW(6), false),
+('ca000000-0000-0000-0000-000000000001', NULL, 'Phụ kiện', 'accessories', true, NOW(6), NOW(6), false),
+('ca000000-0000-0000-0000-000000000002', 'ca000000-0000-0000-0000-000000000001', 'Ví', 'wallets', true, NOW(6), NOW(6), false),
+('ca000000-0000-0000-0000-000000000003', 'ca000000-0000-0000-0000-000000000001', 'Đồng hồ', 'watches', true, NOW(6), NOW(6), false),
+('ca000000-0000-0000-0000-000000000004', 'ca000000-0000-0000-0000-000000000001', 'Thắt lưng', 'belts', true, NOW(6), NOW(6), false),
+('ca000000-0000-0000-0000-000000000005', NULL, 'Quần áo', 'clothing', true, NOW(6), NOW(6), false),
+('ca000000-0000-0000-0000-000000000006', 'ca000000-0000-0000-0000-000000000005', 'Áo khoác', 'outerwear', true, NOW(6), NOW(6), false),
+('ca000000-0000-0000-0000-000000000007', 'ca000000-0000-0000-0000-000000000005', 'Đầm', 'dresses', true, NOW(6), NOW(6), false),
 ('ca000000-0000-0000-0000-000000000008', 'ca000000-0000-0000-0000-000000000005', 'Sneaker', 'sneakers', true, NOW(6), NOW(6), false);
 
 INSERT IGNORE INTO vouchers (id, code, discount_type, discount_value, min_order_value, max_discount, start_date, end_date, usage_limit, used_count, status, created_at, updated_at, is_deleted) VALUES
@@ -31,13 +31,13 @@ INSERT IGNORE INTO vouchers (id, code, discount_type, discount_value, min_order_
 ('vc000000-0000-0000-0000-000000000003', 'FREESHIP', 'FIXED_AMOUNT', 30000.0000, 0.0000, 30000.0000, DATE_SUB(NOW(6), INTERVAL 1 DAY), DATE_ADD(NOW(6), INTERVAL 6 MONTH), 2000, 0, 'ACTIVE', NOW(6), NOW(6), false);
 
 UPDATE categories SET name = CASE id
-  WHEN 'ca000000-0000-0000-0000-000000000001' THEN 'Phu kien'
-  WHEN 'ca000000-0000-0000-0000-000000000002' THEN 'Vi'
-  WHEN 'ca000000-0000-0000-0000-000000000003' THEN 'Dong ho'
-  WHEN 'ca000000-0000-0000-0000-000000000004' THEN 'That lung'
-  WHEN 'ca000000-0000-0000-0000-000000000005' THEN 'Quan ao'
-  WHEN 'ca000000-0000-0000-0000-000000000006' THEN 'Ao khoac'
-  WHEN 'ca000000-0000-0000-0000-000000000007' THEN 'Dam'
+  WHEN 'ca000000-0000-0000-0000-000000000001' THEN 'Phụ kiện'
+  WHEN 'ca000000-0000-0000-0000-000000000002' THEN 'Ví'
+  WHEN 'ca000000-0000-0000-0000-000000000003' THEN 'Đồng hồ'
+  WHEN 'ca000000-0000-0000-0000-000000000004' THEN 'Thắt lưng'
+  WHEN 'ca000000-0000-0000-0000-000000000005' THEN 'Quần áo'
+  WHEN 'ca000000-0000-0000-0000-000000000006' THEN 'Áo khoác'
+  WHEN 'ca000000-0000-0000-0000-000000000007' THEN 'Đầm'
   WHEN 'ca000000-0000-0000-0000-000000000008' THEN 'Sneaker'
   ELSE name
 END

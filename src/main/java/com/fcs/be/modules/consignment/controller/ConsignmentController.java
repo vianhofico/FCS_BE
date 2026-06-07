@@ -15,6 +15,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/api/v1/consignments")
@@ -43,9 +45,14 @@ public class ConsignmentController {
         @RequestParam(required = false) ConsignmentRequestStatus status,
         @RequestParam(required = false) Instant startDate,
         @RequestParam(required = false) Instant endDate,
-        @PageableDefault(size = 20) Pageable pageable
+        @PageableDefault(size = 20) Pageable pageable,
+        @AuthenticationPrincipal UUID callerId,
+        Authentication authentication
     ) {
-        ConsignmentFilterRequest filter = new ConsignmentFilterRequest(code, consignorId, status, startDate, endDate);
+        boolean isManagerOrAdmin = authentication != null && authentication.getAuthorities().stream()
+            .anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER") || a.getAuthority().equals("ROLE_ADMIN"));
+        UUID effectiveConsignorId = isManagerOrAdmin ? consignorId : callerId;
+        ConsignmentFilterRequest filter = new ConsignmentFilterRequest(code, effectiveConsignorId, status, startDate, endDate);
         return ResponseEntity.ok(ApiResponse.ok("Fetched consignments", consignmentService.getConsignments(filter, pageable)));
     }
 

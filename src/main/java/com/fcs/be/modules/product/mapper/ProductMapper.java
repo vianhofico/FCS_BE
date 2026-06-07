@@ -10,6 +10,7 @@ public interface ProductMapper {
 
     @Mapping(target = "consignmentItemId", source = "consignmentItem.id")
     @Mapping(target = "brandId", source = "brand.id")
+    @Mapping(target = "brandName", source = "brand.name")
     @Mapping(target = "imageUrl", ignore = true)
     ProductResponse toResponse(Product product);
 }
